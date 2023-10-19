@@ -5,7 +5,7 @@
   <component :is="targetComponent"></component>
 </template>
 <script>
-import { defineAsyncComponent } from "vue";
+import { defineAsyncComponent, shallowRef } from "vue";
 export default {
   name: "MainContent",
   props: {
@@ -22,7 +22,7 @@ export default {
   },
   data() {
     return {
-      targetComponent: null,
+      targetComponent: shallowRef(null),
     };
   },
   watch: {
