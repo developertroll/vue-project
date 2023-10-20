@@ -51,6 +51,7 @@ export default {
   methods: {
     onSubmit() {
       console.log("submit!");
+      console.log(this.form);
     },
     savePart(item) {
       this.form.Partipacants = item;

@@ -9,6 +9,10 @@
   },
   "dependencies": {
     "@element-plus/icons": "^0.0.11",
+    "@fullcalendar/core": "^6.1.9",
+    "@fullcalendar/daygrid": "^6.1.9",
+    "@fullcalendar/interaction": "^6.1.9",
+    "@fullcalendar/vue3": "^6.1.9",
     "core-js": "^3.8.3",
     "element-plus": "^2.4.0",
     "vue": "^3.2.13"
