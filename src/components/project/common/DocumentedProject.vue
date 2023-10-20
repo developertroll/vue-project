@@ -8,20 +8,30 @@
       </div></template
     >
     <!-- 프로젝트가 가진 내용물 -->
-    <el-descriptions direction="vertical" :column="4" border>
-      <el-descriptions-item label="프로젝트 제목">
-        <!-- 플젝 제목 -->111
-      </el-descriptions-item>
-      <el-descriptions-item label="프로젝트 일자">
-        <!-- 플젝 기간 -->222
-      </el-descriptions-item>
-      <el-descriptions-item label="프로젝트 참가인원">
-        <!--showMember -->333
-      </el-descriptions-item>
-      <el-descriptions-item label="상태">
-        <!-- 결재상태 -->444
-      </el-descriptions-item>
-    </el-descriptions>
+    <el-button type="primary" @click="testshow = false">닫기</el-button>
+    <el-form :model="form" label-width="120px">
+      <el-form-item label="제목">
+        <el-input v-model="form.title" readonly :value="Hello" />
+      </el-form-item>
+      <el-form-item label="진행 날짜">
+        <el-input v-model="form.date1" readonly :value="Hello" />
+        <!-- <el-date-picker
+          v-model="form.date1"
+          type="daterange"
+          range-separator="~"
+          start-placeholder="Start date"
+          end-placeholder="End date"
+        /> -->
+      </el-form-item>
+
+      <el-form-item label="내용">
+        <el-input v-model="form.desc" type="textarea" readonly :value="Hello" />
+      </el-form-item>
+      <!-- <el-form-item label="참가 인원">
+        <addMember @savePart="savePart" />
+        <showMember :parentData="form.Partipacants" />
+      </el-form-item> -->
+    </el-form>
   </el-dialog>
 </template>
 <script>
@@ -30,6 +40,14 @@ export default {
   data() {
     return {
       testshow: true,
+      form: {
+        title: "",
+        date1: "",
+        type: "",
+        desc: "",
+        Partipacants: [],
+      },
+      Hello: "Hello",
     };
   },
 };
