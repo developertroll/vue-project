@@ -12,13 +12,45 @@
   <el-table :data="tableData" style="width: 100%">
     <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column prop="date" label="날짜" width="180"></el-table-column>
-    <el-table-column prop="name" label="제목"></el-table-column>
+    <el-table-column label="제목">
+      <template #default="scope">
+        <div style="display: flex; align-items: center" class="apvName">
+          <span @click="clickHandle(scope.row)">{{ scope.row.name }}</span>
+        </div>
+      </template>
+    </el-table-column>
     <el-table-column prop="status" label="상태"></el-table-column>
   </el-table>
 </template>
 <script>
 export default {
   name: "ApprovalTable",
+  data() {
+    return {
+      tableData: [
+        {
+          date: "2021-08-01",
+          name: "프로젝트 생성",
+          status: "승인대기",
+        },
+        {
+          date: "2021-08-02",
+          name: "프로젝트 수정",
+          status: "승인대기",
+        },
+        {
+          date: "2021-08-03",
+          name: "프로젝트 삭제",
+          status: "승인대기",
+        },
+      ],
+    };
+  },
+  methods: {
+    clickHandle(row) {
+      console.log("click", row);
+    },
+  },
 };
 </script>
 <style scoped>
@@ -26,5 +58,11 @@ export default {
   margin-top: 1rem;
   display: flex;
   justify-content: flex-end;
+}
+.apvName {
+  cursor: pointer;
+}
+.apvName :hover {
+  color: #409eff;
 }
 </style>

@@ -10,6 +10,8 @@
         range-separator="~"
         start-placeholder="Start date"
         end-placeholder="End date"
+        value-format="YYYY-MM-DD"
+        format="YYYY/MM/DD"
       />
     </el-form-item>
 
