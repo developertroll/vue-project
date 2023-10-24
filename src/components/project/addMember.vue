@@ -1,5 +1,7 @@
 <template lang="">
-  <el-button type="primary" @click="shown = true">추가</el-button>
+  <div class="buttons">
+    <el-button type="primary" @click="shown = true">추가</el-button>
+  </div>
   <el-dialog v-model="shown" width="40%">
     <showMember @savePart="savePart" :addMember="true" />
   </el-dialog>
@@ -25,4 +27,11 @@ export default {
   },
 };
 </script>
-<style lang=""></style>
+<style scoped>
+.buttons {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  margin-left: auto;
+}
+</style>

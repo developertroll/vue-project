@@ -5,9 +5,11 @@
     <DocumentedProject v-if="devTest === 1" />
     <ApprovalTable v-if="devTest === 2" />
     <AllocateWorkVue v-if="devTest === 3" />
+    <AllocateWorkV2 v-if="devTest === 4" />
     <el-button type="primary" @click="devTest = 1">상세 프로젝트</el-button>
-    <el-button type="primary" @click="devTest = 2">상세 프로젝트</el-button>
-    <el-button type="primary" @click="devTest = 3">상세 프로젝트</el-button>
+    <el-button type="primary" @click="devTest = 2">결재 테이블</el-button>
+    <el-button type="primary" @click="devTest = 3">업무할당 v1</el-button>
+    <el-button type="primary" @click="devTest = 4">업무할당 v2</el-button>
   </div>
   <el-card class="card" shadow="always">
     <template #header>
@@ -81,7 +83,7 @@ import ApprovalTable from "@/components/project/common/ApprovalTable.vue";
 import AllocateWorkVue from "./common/AllocateWork.vue";
 import ShowAllocate from "./common/ShowAllocate.vue";
 import moment from "moment";
-
+import AllocateWorkV2 from "./common/AllocateWorkV2.vue";
 export default {
   name: "projectOngoing",
   components: {
@@ -89,6 +91,7 @@ export default {
     ApprovalTable,
     AllocateWorkVue,
     ShowAllocate,
+    AllocateWorkV2,
   },
   data() {
     return {

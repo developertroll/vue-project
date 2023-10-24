@@ -22,6 +22,9 @@
       <addMember @savePart="savePart" />
       <showMember :parentData="form.Partipacants" />
     </el-form-item>
+    <el-form-item label="업무 할당">
+      <AllocateWorkV2 :Parti="form.Partipacants" />
+    </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onSubmit">Create</el-button>
       <el-button>Cancel</el-button>
@@ -32,11 +35,13 @@
 <script>
 import addMember from "./addMember.vue";
 import showMember from "./showMember.vue";
+import AllocateWorkV2 from "./common/AllocateWorkV2.vue";
 export default {
   name: "createPlan",
   components: {
     addMember,
     showMember,
+    AllocateWorkV2,
   },
   emits: ["savePart"],
   data() {
