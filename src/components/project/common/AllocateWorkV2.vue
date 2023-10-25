@@ -3,12 +3,34 @@
     <el-button type="primary" @click="editClick" v-show="!Status"
       >수정</el-button
     >
-    <el-button type="primary" @click="saveWork" v-show="Status">저장</el-button>
+    <el-tooltip
+      placement="left"
+      content="모든 정보가 채워지면 저장이 가능합니다."
+    >
+      <el-button
+        type="primary"
+        @click="saveWork"
+        v-show="Status"
+        :disabled="!AllDataFinished"
+        >저장</el-button
+      >
+    </el-tooltip>
     <el-button type="primary" @click="addRow" v-show="Status">추가</el-button>
-    <el-button type="primary" v-show="Status">초기화</el-button>
+    <el-button type="primary" v-show="Status" @click="clearData"
+      >초기화</el-button
+    >
   </div>
   <el-table :data="workData" border>
-    <el-table-column type="index" width="50"></el-table-column>
+    <el-table-column width="60" label="삭제">
+      <template #default="scope">
+        <el-button
+          type="danger"
+          :icon="Delete"
+          @click="deleteRow(scope.row)"
+          circle
+        />
+      </template>
+    </el-table-column>
     <el-table-column label="담당자" props="name">
       <template #default="scope">
         <div v-if="Status">
@@ -51,11 +73,11 @@
         <div v-else>{{ scope.row.desc }}</div>
       </template>
     </el-table-column>
-    <el-table-column prop="update" label="마감일">
+    <el-table-column prop="deadLine" label="마감일">
       <template #default="scope">
         <div v-if="Status">
           <el-date-picker
-            v-model="scope.row.update"
+            v-model="scope.row.deadLine"
             type="date"
             placeholder="마감일"
             :disabled-date="disabledTime"
@@ -64,34 +86,24 @@
             :default-value="new Date(defaultDate)"
           />
         </div>
-        <div v-else>{{ scope.row.update }}</div>
+        <div v-else>{{ scope.row.deadLine }}</div>
       </template>
     </el-table-column>
   </el-table>
 </template>
 <script>
+import { Delete } from "@element-plus/icons";
 import moment from "moment";
 import { JobList } from "@/composables/jobList";
 export default {
   name: "ShowAllocate",
+  emits: ["saveWorks", "commitEdit"],
   data() {
     return {
-      workData: [
-        {
-          name: "김철수",
-          position: "개발",
-          desc: "바닥만들기",
-          update: "2023-08-01",
-        },
-        {
-          name: "박영희",
-          position: "디버그",
-          desc: "바닥고치기 ",
-          update: "2023-08-02",
-        },
-      ],
-      Status: false,
+      workData: [],
+      Status: true,
       JobList,
+      Delete,
     };
   },
   props: {
@@ -110,7 +122,7 @@ export default {
       type: Object,
       default: () => {
         return {
-          date1: ["2023-08-01", "2023-08-12"],
+          date1: ["2021-08-01", "2021-08-11"],
         };
       },
     },
@@ -121,30 +133,80 @@ export default {
         name: "",
         position: "",
         desc: "",
-        update: "",
+        deadLine: "",
       });
     },
     saveWork() {
       console.log(this.workData);
+      this.$emit("saveWorks", this.workData);
+      this.$emit("commitEdit", true);
       this.Status = !this.Status;
     },
     editClick() {
+      this.$emit("commitEdit", false);
       this.Status = !this.Status;
       console.log(this.Status);
     },
+    deleteRow(row) {
+      const index = this.workData.indexOf(row);
+      if (index !== -1) {
+        this.workData.splice(index, 1);
+      }
+    },
+    dataInit() {
+      if (this.workData.length === 0) {
+        const defaultValue = this.Parti.map((item) => {
+          return {
+            name: item.name,
+            position: "",
+            desc: "",
+            deadLine: "",
+          };
+        });
+        this.workData = defaultValue;
+      }
+    },
+    clearData() {
+      this.workData = [];
+      this.$message({
+        type: "success",
+        message: "초기화 되었습니다.",
+      });
+    },
   },
   computed: {
+    TimeLines() {
+      return this.parentDate;
+    },
     disabledTime() {
-      const startDate = moment(this.parentDate.date1[0]);
-      const endDate = moment(this.parentDate.date1[1]);
+      const startDate = moment(this.TimeLines[0]);
+      const endDate = moment(this.TimeLines[1]);
       return (time) => {
         return time < startDate || time > endDate;
       };
     },
     defaultDate() {
-      const startDate = moment(this.parentDate.date1[0]);
+      const startDate = moment(this.TimeLines[0]);
       return startDate;
     },
+    AllDataFinished() {
+      if (this.workData.length === 0) return false;
+      const currentData = this.workData;
+      const isDataCompleted = (currentData) => {
+        return currentData.some((item) => {
+          return (
+            item.name.trim() === "" ||
+            item.position.trim() === "" ||
+            item.desc.trim() === "" ||
+            item.deadLine.trim() === ""
+          );
+        });
+      };
+      return !isDataCompleted(currentData);
+    },
+  },
+  mounted() {
+    this.dataInit();
   },
 };
 </script>

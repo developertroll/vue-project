@@ -1,40 +1,42 @@
 <template lang="">
-  <el-table :data="tableData" border style="width: 100%">
+  <el-table :data="PlanList" border style="width: 100%">
     <el-table-column type="selection" width="55" />
-    <el-table-column prop="date" label="Date" width="180" />
-    <el-table-column prop="name" label="Name" width="180" />
-    <el-table-column prop="address" label="Address" />
+    <el-table-column prop="title" label="제목" />
+    <el-table-column prop="desc" label="Name" />
+    <el-table-column prop="member" label="참가인원" />
   </el-table>
 </template>
 <script>
+import { projectPlanList } from "@/composables/projectPlanList";
 export default {
   name: "projectPlan",
   data() {
     return {
       currentProject: null,
-      tableData: [
-        {
-          date: "2016-05-03",
-          name: "Tom",
-          address: "No. 189, Grove St, Los Angeles",
-        },
-        {
-          date: "2016-05-02",
-          name: "Tom",
-          address: "No. 189, Grove St, Los Angeles",
-        },
-        {
-          date: "2016-05-04",
-          name: "Tom",
-          address: "No. 189, Grove St, Los Angeles",
-        },
-        {
-          date: "2016-05-01",
-          name: "Tom",
-          address: "No. 189, Grove St, Los Angeles",
-        },
-      ],
+      tableData: [],
+      projectPlanList,
     };
+  },
+  computed: {
+    PlanList() {
+      const newList = [];
+      this.projectPlanList.List.forEach((item) => {
+        let text = "";
+        item.Partipacants.forEach((member, index) => {
+          if (index + 1 !== item.Partipacants.length) {
+            text += member.name + ", ";
+          } else if (index + 1 === item.Partipacants.length) {
+            text += member.name;
+          }
+        });
+        newList.push({
+          title: item.title,
+          desc: item.desc,
+          member: text,
+        });
+      });
+      return newList;
+    },
   },
 };
 </script>

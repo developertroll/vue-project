@@ -2,13 +2,16 @@
   <el-table
     :data="tableData"
     border
-    style="width: 100%"
     @selection-change="handleSelect"
+    :table-layout="tableLayout"
   >
-    <el-table-column prop="name" label="Name" width="180" />
+    <el-table-column prop="name" label="Name" />
+    <el-table-column prop="job" label="Job" />
+    <el-table-column prop="rank" label="Rank" />
   </el-table>
 </template>
 <script>
+import { MemberList } from "@/composables/memberList";
 export default {
   name: "projectPlan",
   props: {
@@ -24,21 +27,9 @@ export default {
   data() {
     return {
       currentProject: null,
-      tableData: [
-        {
-          name: "Tom",
-        },
-        {
-          name: "Mary",
-        },
-        {
-          name: "John",
-        },
-        {
-          name: "Jenny",
-        },
-      ],
-      selectedRow: [],
+      tableData: [],
+      MemberList,
+      tableLayout: "auto",
     };
   },
   methods: {
@@ -47,8 +38,11 @@ export default {
     },
   },
   watch: {
-    parentData(newVaule) {
-      this.tableData = newVaule;
+    parentData(newValue) {
+      // const { Partipacants } = newValue;
+      // console.log(Partipacants);
+      // console.log(MemberList.List);
+      this.tableData = newValue;
     },
   },
 };
