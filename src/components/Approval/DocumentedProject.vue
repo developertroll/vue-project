@@ -1,5 +1,5 @@
 <template lang="">
-  <el-dialog v-model="testshow" width="80%" height="90%">
+  <el-dialog v-model="open" width="80%" height="90%">
     <template #header="{ titleId, titleClass }">
       <div class="dialogHeader">
         <h2 :id="titleId" :class="titleClass">
@@ -8,7 +8,6 @@
       </div></template
     >
     <!-- 프로젝트가 가진 내용물 -->
-    <el-button type="primary" @click="testshow = false">닫기</el-button>
     <el-form :model="form" label-width="120px">
       <el-form-item label="제목">
         <el-input v-model="form.title" readonly :value="Hello" />
@@ -39,7 +38,6 @@ export default {
   name: "DocumentedProject",
   data() {
     return {
-      testshow: true,
       form: {
         title: "",
         date1: "",
@@ -49,6 +47,21 @@ export default {
       },
       Hello: "Hello",
     };
+  },
+  props: {
+    project: {
+      type: Object,
+      default: () => {},
+    },
+  },
+  computed: {
+    open() {
+      if (this.project === null) {
+        return false;
+      } else {
+        return true;
+      }
+    },
   },
 };
 </script>

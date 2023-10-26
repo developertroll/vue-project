@@ -5,4 +5,8 @@ export const projectPlanList = reactive({
   saveList(newList) {
     this.List.push(newList);
   },
+  searchList(value) {
+    const result = this.List.filter((item) => item.title.includes(value));
+    return result;
+  },
 });

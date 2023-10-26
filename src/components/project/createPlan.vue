@@ -25,7 +25,12 @@
     </el-form-item>
     <el-divider />
     <el-form-item label="내용" prop="desc">
-      <el-input v-model="form.desc" type="textarea" :disabled="PassWork" />
+      <el-input
+        v-model="form.desc"
+        type="textarea"
+        :disabled="PassWork"
+        autosize
+      />
     </el-form-item>
     <el-divider />
     <el-form-item label="참가 인원" prop="Partipacants">
@@ -84,6 +89,8 @@ import showMemberV2 from "./showMemberV2.vue";
 import AllocateWorkV2 from "./common/AllocateWorkV2.vue";
 import { projectPlanList } from "@/composables/projectPlanList";
 import { ElMessageBox } from "element-plus";
+import moment from "moment";
+import { ApprovalList } from "@/composables/approvalList";
 export default {
   name: "createPlan",
   components: {
@@ -99,7 +106,9 @@ export default {
         works: [],
         desc: "",
         Partipacants: [],
+        update: "",
       },
+      ApprovalList,
       rules: {
         title: [
           {
@@ -148,10 +157,13 @@ export default {
     onSubmit() {
       this.$message({
         type: "success",
-        message: "프로젝트 계획이 작성되었습니다",
+        message:
+          "프로젝트 계획이 작성되었습니다. 승인이 끝나면 프로젝트가 시작됩니다.",
       });
       console.log("submit!");
       console.log(this.form);
+      this.form.update = moment().format("YYYY-MM-DD");
+      this.ApprovalList.request(this.form, "계획", "요청");
       this.projectPlanList.saveList(this.form);
       console.log(this.projectPlanList.List);
     },

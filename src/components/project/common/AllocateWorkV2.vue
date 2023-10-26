@@ -68,6 +68,7 @@
             v-model="scope.row.desc"
             type="textarea"
             placeholder="간단하게 작성해주세요"
+            autosize
           />
         </div>
         <div v-else>{{ scope.row.desc }}</div>
@@ -134,6 +135,7 @@ export default {
         position: "",
         desc: "",
         deadLine: "",
+        status: "B",
       });
     },
     saveWork() {
@@ -161,6 +163,7 @@ export default {
             position: "",
             desc: "",
             deadLine: "",
+            status: "B",
           };
         });
         this.workData = defaultValue;

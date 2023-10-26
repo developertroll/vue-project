@@ -1,4 +1,5 @@
 <template lang="">
+  <ApprovalMain />
   <div class="buttons">
     <el-button type="primary" @click="currentProject = !currentProject"
       >생성</el-button
@@ -16,11 +17,13 @@
 <script>
 import showPlan from "./showPlan.vue";
 import createPlan from "./createPlan.vue";
+import ApprovalMain from "../Approval/ApprovalMain.vue";
 export default {
   name: "projectPlan",
   components: {
     showPlan,
     createPlan,
+    ApprovalMain,
   },
   data() {
     return {
