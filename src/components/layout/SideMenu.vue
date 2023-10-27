@@ -67,6 +67,15 @@ export default {
             },
           ],
         },
+        {
+          label: "결재",
+          index: "Approval",
+          icon: "location",
+          submenus: [
+            { label: "결재", index: "ApprovalMain", path: "Approval" },
+            { label: "구성원", index: "orgMember", path: "org" },
+          ],
+        },
       ],
     });
     const handleSelect = (item) => {

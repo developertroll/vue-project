@@ -31,34 +31,4 @@ export default {
   },
 };
 </script>
-<style scoped>
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.card-footer {
-  display: flex;
-  justify-content: flex-end;
-}
-.percentage-value {
-  display: block;
-  margin-top: 10px;
-  font-size: 28px;
-}
-.percentage-label {
-  display: block;
-  margin-top: 10px;
-  font-size: 12px;
-}
-.card {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-.circleBox {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-</style>
+<style scoped></style>

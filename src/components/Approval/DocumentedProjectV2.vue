@@ -11,11 +11,17 @@
       </div>
     </template>
     <!-- 프로젝트가 가진 내용물 -->
-    <el-form :model="form" label-width="120px">
-      <el-form-item label="제목">
-        <el-input v-model="form.title" readonly />
-      </el-form-item>
-      <el-form-item label="진행 날짜">
+    <el-card border v-for="(value, key, index) in form" :key="index">
+      <template #header>
+        <div class="card-header">
+          {{ translateKey[key] }}
+        </div>
+      </template>
+      <template v-if="Array.isArray(value) && key !== 'date1'">
+        <showMemberV2 :parentData="value" v-if="key === 'Partipacants'" />
+        <ShowAllocate :project="form" v-else />
+      </template>
+      <template v-else-if="key === 'date1'">
         <el-date-picker
           v-model="form.date1"
           type="daterange"
@@ -24,21 +30,23 @@
           end-placeholder="End date"
           readonly
         />
-      </el-form-item>
-      <el-form-item label="내용">
-        <el-input v-model="form.desc" type="textarea" readonly />
-      </el-form-item>
-      <!-- <el-form-item label="참가 인원">
-        <addMember @savePart="savePart" />
-        <showMember :parentData="form.Partipacants" />
-      </el-form-item> -->
-    </el-form>
+      </template>
+      <template v-else>
+        {{ value }}
+      </template>
+    </el-card>
   </el-dialog>
 </template>
 <script>
 import { ApprovalList } from "@/composables/approvalList";
+import showMemberV2 from "./../project/showMemberV2.vue";
+import ShowAllocate from "./../project/common/ShowAllocate.vue";
 export default {
   name: "DocumentedProject",
+  components: {
+    showMemberV2,
+    ShowAllocate,
+  },
   data() {
     return {
       test: false,
@@ -46,8 +54,19 @@ export default {
       ApprovalList,
       data: {
         title: "",
-        date1: "",
+        date1: [],
+        works: [],
         desc: "",
+        Partipacants: [],
+        update: "",
+      },
+      translateKey: {
+        title: "제목",
+        date1: "진행 날짜",
+        works: "업무",
+        desc: "내용",
+        Partipacants: "참가 인원",
+        update: "날짜 업데이트",
       },
     };
   },
@@ -73,9 +92,12 @@ export default {
 <style scoped>
 .dialogHeader {
   background-color: #409eff;
-  height: 2rem;
+  height: 2.5rem;
 }
-HTML {
-  overflow: hidden;
+.dialogHeader h2 {
+  font-size: 1.25rem;
+  padding: 0.5rem;
+  color: white;
+  text-align: center;
 }
 </style>

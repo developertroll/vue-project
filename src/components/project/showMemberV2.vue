@@ -1,6 +1,6 @@
 <template lang="">
   <el-table
-    :data="tableData"
+    :data="parentData"
     border
     @selection-change="handleSelect"
     :table-layout="tableLayout"
@@ -16,14 +16,11 @@ export default {
   name: "projectPlan",
   props: {
     parentData: {
-      type: Object,
-      default: () => {
-        return {
-          Partipacants: [],
-        };
-      },
+      type: Array,
+      default: () => [],
     },
   },
+
   data() {
     return {
       currentProject: null,
@@ -35,14 +32,6 @@ export default {
   methods: {
     handleSelect(selection) {
       this.selectedRow = selection;
-    },
-  },
-  watch: {
-    parentData(newValue) {
-      // const { Partipacants } = newValue;
-      // console.log(Partipacants);
-      // console.log(MemberList.List);
-      this.tableData = newValue;
     },
   },
 };

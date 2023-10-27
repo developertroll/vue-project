@@ -164,7 +164,7 @@ export default {
       console.log(this.form);
       this.form.update = moment().format("YYYY-MM-DD");
       this.ApprovalList.request(this.form, "계획", "요청");
-      this.projectPlanList.saveList(this.form);
+      // this.projectPlanList.saveList(this.form);
       console.log(this.projectPlanList.List);
     },
     savePart(item) {

@@ -4,20 +4,22 @@
     <!-- 해당 테이블은 결재요청이 들어온 모든 프로젝트를 담당하는 페이지, 클릭을 할 시 dialog가 떠 해당 결재요청이 들어온 문서의 내용이 보이며 버튼을 눌러 승인,반려,취소,삭제가 가능함 -->
   </div>
   <div class="buttons">
-    <el-button type="primary">승인</el-button>
-    <el-button type="danger">반려</el-button>
-    <el-button type="info">취소</el-button>
-    <el-button type="warning">삭제</el-button>
+    <el-button type="primary" @click="approvalSubmit('승인')">승인</el-button>
+    <el-button type="danger" @click="approvalSubmit('반려')">반려</el-button>
+    <el-button type="info" @click="approvalSubmit('취소')">취소</el-button>
+    <el-button type="warning" @click="approvalSubmit('삭제')">삭제</el-button>
   </div>
-  <el-table :data="appData" style="width: 100%">
+  <el-table
+    :data="appData"
+    style="width: 100%"
+    @selection-change="handleSelect"
+  >
     <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column prop="type" label="종류"></el-table-column>
     <el-table-column prop="date" label="날짜"></el-table-column>
     <el-table-column label="제목">
       <template #default="scope">
-        <div style="display: flex; align-items: center" class="apvName">
-          <span @click="clickHandle(scope.row)">{{ scope.row.title }}</span>
-        </div>
+        <DocumentedProjectV2 :project="scope.row" />
       </template>
     </el-table-column>
     <el-table-column prop="status" label="상태"></el-table-column>
@@ -26,21 +28,61 @@
 <script>
 import { ApprovalList } from "@/composables/approvalList";
 import { projectPlanList } from "@/composables/projectPlanList";
+import DocumentedProjectV2 from "./DocumentedProjectV2.vue";
+import { ElMessageBox } from "element-plus";
 export default {
   name: "ApprovalTable",
+  components: {
+    DocumentedProjectV2,
+  },
   data() {
     return {
       tableData: [],
       ApprovalList,
       projectPlanList,
+      selectedRow: [],
+      type: "",
     };
   },
   methods: {
-    clickHandle(row) {
-      console.log("click", row);
-      const newList = this.projectPlanList.searchList(row.title);
-      console.log("find?", this.projectPlanList.searchList(row.title));
-      this.$emit("dialogClick", newList);
+    handleSelect(selection) {
+      this.selectedRow = selection;
+    },
+    approvalSubmit(type) {
+      console.log(type);
+      ElMessageBox.confirm(
+        "선택된 요청들을 " + type + "하시겠습니까?",
+        "info",
+        {
+          confirmButtonText: "승인",
+          cancelButtonText: "취소",
+          type: "info",
+        }
+      )
+        .then(() => {
+          console.log("then 넘어감");
+          console.log(this.selectedRow);
+          for (const element of this.selectedRow) {
+            console.log(element);
+            let original = this.ApprovalList.findList(element);
+            this.ApprovalList.changeStatus(original, type);
+            // type이 '승인' 일 경우 approvalList에서 completion 함수를 실행시킴
+            if (type === "승인") {
+              this.ApprovalList.completion(original);
+            }
+          }
+          this.$message({
+            type: "success",
+            message: "처리되었습니다!",
+          });
+          this.selectedRow = [];
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "취소되었습니다",
+          });
+        });
     },
   },
   computed: {
@@ -49,7 +91,7 @@ export default {
       this.ApprovalList.requestList.forEach((item) => {
         newList.push({
           type: item.type,
-          date: item.date,
+          date: item.update,
           title: item.title,
           status: item.status,
         });

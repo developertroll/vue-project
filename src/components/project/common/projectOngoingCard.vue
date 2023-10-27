@@ -15,7 +15,6 @@
       <el-progress
         :percentage="remainingTime"
         type="circle"
-        show-text="true"
         :color="customColors"
       >
         <template #default="{ percentage }">
@@ -23,13 +22,13 @@
           <span class="percentage-label">기한</span>
         </template>
       </el-progress>
-      <el-progress :percentage="progress" type="circle" show-text="true">
+      <el-progress :percentage="progress" type="circle">
         <template #default="{ percentage }">
           <span class="percentage-value">{{ percentage }}%</span>
           <span class="percentage-label">진행도</span>
         </template>
       </el-progress>
-      <el-progress :percentage="80" type="circle" show-text="true">
+      <el-progress :percentage="80" type="circle">
         <template #default="{ percentage }">
           <span class="percentage-value">{{ percentage }}%</span>
           <span class="percentage-label">승인</span>
