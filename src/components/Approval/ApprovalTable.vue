@@ -16,10 +16,16 @@
   >
     <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column prop="type" label="종류"></el-table-column>
-    <el-table-column prop="date" label="날짜"></el-table-column>
+    <el-table-column prop="update" label="날짜"></el-table-column>
     <el-table-column label="제목">
       <template #default="scope">
-        <DocumentedProjectV2 :project="scope.row" />
+        <DocumentedProjectV2
+          :project="scope.row"
+          v-if="scope.row.type === '계획'"
+        />
+        <div v-else>
+          {{ scope.row.title }}
+        </div>
       </template>
     </el-table-column>
     <el-table-column prop="status" label="상태"></el-table-column>
@@ -64,12 +70,28 @@ export default {
           console.log(this.selectedRow);
           for (const element of this.selectedRow) {
             console.log(element);
-            let original = this.ApprovalList.findList(element);
-            this.ApprovalList.changeStatus(original, type);
-            // type이 '승인' 일 경우 approvalList에서 completion 함수를 실행시킴
-            if (type === "승인") {
-              this.ApprovalList.completion(original);
+            if (element.type === "업무") {
+              let originalElement = {
+                type: element.type,
+                update: element.update,
+                title: element.originalTitle,
+                status: element.status,
+                parent: element.parent,
+              };
+              let newOriginal = this.projectPlanList.findWorks(originalElement);
+              console.log(newOriginal);
+              this.ApprovalList.changeStatus(newOriginal, type);
+              console.log("결재완료된 업무", newOriginal);
+              this.ApprovalList.completion(newOriginal);
+            } else {
+              let original = this.ApprovalList.findList(element);
+              this.ApprovalList.changeStatus(original, type);
+              if (type === "승인") {
+                this.ApprovalList.completion(original);
+              }
             }
+
+            // type이 '승인' 일 경우 approvalList에서 completion 함수를 실행시킴
           }
           this.$message({
             type: "success",
@@ -89,12 +111,24 @@ export default {
     appData() {
       const newList = [];
       this.ApprovalList.requestList.forEach((item) => {
-        newList.push({
-          type: item.type,
-          date: item.update,
-          title: item.title,
-          status: item.status,
-        });
+        console.log(item);
+        if (item.type === "업무") {
+          newList.push({
+            type: item.type,
+            update: item.update,
+            title: item.name + " " + item.position + "업무 보고",
+            status: item.status,
+            originalTitle: item.name,
+            parent: item.parent,
+          });
+        } else {
+          newList.push({
+            type: item.type,
+            update: item.update,
+            title: item.title,
+            status: item.status,
+          });
+        }
       });
       return newList;
     },

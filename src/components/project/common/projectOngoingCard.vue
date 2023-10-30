@@ -52,7 +52,7 @@
         </p>
       </div>
       <span class="title">참가 인원</span>
-      <ShowAllocate :project="project" />
+      <ShowAllocate :project="project" :onGoing="true" />
     </div>
     <div class="card-footer">
       <span>마지막 업데이트: {{ project.update }}</span>
@@ -81,6 +81,7 @@ export default {
           participants: [],
           works: [],
           update: "",
+          index: "",
         };
       },
     },
@@ -119,13 +120,16 @@ export default {
       const start = moment(this.startTime);
       const end = moment(this.endTime);
       const current = moment(this.currentTime);
+      if (current.diff(start, "days") < 0) return 0;
       return Math.round(
         (current.diff(start, "days") / end.diff(start, "days")) * 100
       );
     },
     progress() {
       const total = this.project.works.length;
-      const done = this.project.works.filter((work) => work.A).length;
+      const done = this.project.works.filter(
+        (work) => work.status === "완료"
+      ).length;
       return Math.round((done / total) * 100);
     },
     description() {

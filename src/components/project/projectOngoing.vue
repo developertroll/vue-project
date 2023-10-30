@@ -1,5 +1,5 @@
 <template lang="">
-  <template v-for="item in projectPlanList.List" :key="item.title">
+  <template v-for="item in calledList" :key="item.title">
     <projectOngoingCard :project="item" @detailClick="viewDetail" />
   </template>
 </template>
@@ -16,6 +16,11 @@ export default {
       devTest: 0,
       projectPlanList,
     };
+  },
+  computed: {
+    calledList() {
+      return this.projectPlanList.callList();
+    },
   },
   setup() {
     const format = (percentage) =>

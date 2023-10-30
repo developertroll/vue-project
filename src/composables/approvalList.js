@@ -8,20 +8,28 @@ export const ApprovalList = reactive({
     this.requestList.push(addType);
   },
   completion(newList) {
-    const raw = this.requestList.find((list) => list.title === newList.title);
+    console.log(newList);
+    let raw = this.requestList.find((list) => {
+      if (newList.type === "업무") {
+        return list.name === newList.name;
+      } else {
+        return list.title === newList.title;
+      }
+    });
+    console.log(raw);
     if (raw.type === "계획") {
       projectPlanList.saveList(newList);
     }
+    if (raw.type === "업무") {
+      projectPlanList.workFinish(newList);
+    }
     this.completeList.push(newList);
+    raw = "";
   },
   type: ["계획", "업무", "휴가", "기타"],
   status: ["대기", "승인", "반려", "취소"],
   findList(item) {
     const raw = this.requestList.find((list) => list.title === item.title);
-    // switch (raw.type) {
-    //   case "계획":
-    //     return projectPlanList.List.find((list) => (list.title = item.title));
-    // }
     return raw;
   },
   search(item) {

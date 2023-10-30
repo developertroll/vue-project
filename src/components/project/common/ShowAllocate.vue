@@ -5,12 +5,21 @@
     <el-table-column prop="position" label="업무"></el-table-column>
     <el-table-column prop="deadLine" label="마감일"></el-table-column>
     <el-table-column prop="status" label="상태"></el-table-column>
+    <el-table-column v-if="onGoing">
+      <template #default="scope">
+        <createWorkProgress :work="scope.row" :project="project" />
+      </template>
+    </el-table-column>
   </el-table>
 </template>
 <script>
 import { projectPlanList } from "@/composables/projectPlanList";
+import createWorkProgress from "../createWorkProgress.vue";
 export default {
   name: "ShowAllocate",
+  components: {
+    createWorkProgress,
+  },
   data() {
     return {
       projectPlanList,
@@ -30,28 +39,27 @@ export default {
         };
       },
     },
+    onGoing: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     workData() {
       const newList = [];
       this.project.works.forEach((item) => {
-        let statusText = "";
-        if (item.status === "A") {
-          statusText = "미승인";
-        } else if (item.status === "B") {
-          statusText = "진행중";
-        } else if (item.status === "C") {
-          statusText = "완료";
-        }
         newList.push({
           name: item.name,
           position: item.position,
           desc: item.desc,
           deadLine: item.deadLine,
-          status: statusText,
+          status: item.status,
         });
       });
       return newList;
+    },
+    onGo() {
+      return this.onGoing === "true";
     },
   },
 };
