@@ -67,6 +67,8 @@ export default {
         desc: "내용",
         Partipacants: "참가 인원",
         update: "날짜 업데이트",
+        type: "결재 종류",
+        status: "결재 상태",
       },
     };
   },
@@ -92,7 +94,6 @@ export default {
 <style scoped>
 .dialogHeader {
   background-color: #409eff;
-  height: 2.5rem;
 }
 .dialogHeader h2 {
   font-size: 1.25rem;

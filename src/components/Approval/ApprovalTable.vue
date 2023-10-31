@@ -66,29 +66,15 @@ export default {
         }
       )
         .then(() => {
-          console.log("then 넘어감");
-          console.log(this.selectedRow);
+          // console.log("then 넘어감");
+          // console.log(this.selectedRow);
           for (const element of this.selectedRow) {
-            console.log(element);
-            if (element.type === "업무") {
-              let originalElement = {
-                type: element.type,
-                update: element.update,
-                title: element.originalTitle,
-                status: element.status,
-                parent: element.parent,
-              };
-              let newOriginal = this.projectPlanList.findWorks(originalElement);
-              console.log(newOriginal);
-              this.ApprovalList.changeStatus(newOriginal, type);
-              console.log("결재완료된 업무", newOriginal);
-              this.ApprovalList.completion(newOriginal);
-            } else {
-              let original = this.ApprovalList.findList(element);
-              this.ApprovalList.changeStatus(original, type);
-              if (type === "승인") {
-                this.ApprovalList.completion(original);
-              }
+            // console.log(element);
+            let original = this.ApprovalList.findList(element);
+            // console.log(original);
+            this.ApprovalList.changeStatus(original, type);
+            if (type === "승인") {
+              this.ApprovalList.completion(original);
             }
 
             // type이 '승인' 일 경우 approvalList에서 completion 함수를 실행시킴
@@ -97,7 +83,6 @@ export default {
             type: "success",
             message: "처리되었습니다!",
           });
-          this.selectedRow = [];
         })
         .catch(() => {
           this.$message({
@@ -109,16 +94,16 @@ export default {
   },
   computed: {
     appData() {
-      const newList = [];
+      let newList = [];
       this.ApprovalList.requestList.forEach((item) => {
-        console.log(item);
+        // console.log(item);
         if (item.type === "업무") {
           newList.push({
             type: item.type,
             update: item.update,
             title: item.name + " " + item.position + "업무 보고",
             status: item.status,
-            originalTitle: item.name,
+            name: item.name,
             parent: item.parent,
           });
         } else {

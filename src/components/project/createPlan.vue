@@ -98,6 +98,7 @@ export default {
     showMemberV2,
     AllocateWorkV2,
   },
+  emits: ["savePlan"],
   data() {
     return {
       form: {
@@ -166,6 +167,7 @@ export default {
       this.ApprovalList.request(this.form, "계획", "요청");
       // this.projectPlanList.saveList(this.form);
       console.log(this.projectPlanList.List);
+      this.$emit("savePlan");
     },
     savePart(item) {
       this.form.Partipacants = item;

@@ -1,6 +1,6 @@
 <template lang="">
   <template v-for="item in calledList" :key="item.title">
-    <projectOngoingCard :project="item" @detailClick="viewDetail" />
+    <projectOngoingCard :project="item" />
   </template>
 </template>
 <script>
@@ -20,18 +20,6 @@ export default {
   computed: {
     calledList() {
       return this.projectPlanList.callList();
-    },
-  },
-  setup() {
-    const format = (percentage) =>
-      percentage === 100 ? "Full" : `${percentage}%`;
-    return {
-      format,
-    };
-  },
-  methods: {
-    viewDetail(item) {
-      console.log(item);
     },
   },
 };

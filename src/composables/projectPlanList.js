@@ -6,13 +6,20 @@ export const projectPlanList = reactive({
   finishedList: [],
   //workList는 계획단계를 넘어간 진행단계에 있는 프로젝트들의 업무가 사용할 테이블. 이렇게 하면 계획안에 있던 내용을 보면서도 진행 중간 업무가 변경되더라도 계획안이 안바뀜.
   saveList(newList) {
-    this.List.push({ ...newList, index: this.List.length + 1, status: "진행" });
+    console.log(newList);
+    const idx = this.List.length;
     const workPush = {
       works: newList.works,
-      parentIdx: this.List.length,
+      parentIdx: idx,
     };
+    delete newList.works;
+    this.List.push({ ...newList, index: idx, status: "진행" });
     console.log(workPush);
     this.workList.push(workPush);
+  },
+  callWorkList(project) {
+    const raw = this.workList.find((list) => list.parentIdx === project.index);
+    return raw;
   },
   callList() {
     const rawData = this.List;
@@ -22,54 +29,24 @@ export const projectPlanList = reactive({
     return result;
   },
   findParentWorkList(item) {
-    let result = -1;
-    this.workList.forEach((workListItem, workListIndex) => {
-      const foundWorkListIdx = workListItem.works.findIndex((work) =>
-        this.isEqualWork(work, item)
-      );
-      if (foundWorkListIdx !== -1) {
-        result = workListIndex;
-      }
-    });
+    const result = this.workList.find((list) => list.parentIdx === item);
     return result;
   },
   workFinish(item) {
-    const workListIdx = this.findParentWorkList(item);
-    if (workListIdx !== -1) {
-      const workIdx = this.workList[workListIdx].works.findIndex((work) =>
-        this.isEqualWork(work, item)
+    const parentList = this.findParentWorkList(item.parent.index);
+    const raw = parentList.works.find((list) => list.name === item.name);
+    raw.status = "완료";
+    console.log(raw);
+    if (parentList.works.every((list) => list.status === "완료")) {
+      const parentProject = this.List.find(
+        (list) => list.index === parentList.parentIdx
       );
-      if (workIdx !== -1) {
-        this.workList[workListIdx].works[workIdx].status = "완료";
-      }
+      parentProject.status = "완료";
+      const newList = { ...parentProject, works: parentList.works };
+      this.finishedList.push(newList);
+      const idx = this.workList.indexOf(parentList);
+      this.workList.splice(idx, 1);
     }
-    const raw = this.List.find.list(
-      (list) => list.index === this.workList[workListIdx].parentIdx
-    );
-    console.log(raw, "raw");
-    const raw2 = raw.works.find((list) => list.name === item.name);
-    raw2.status = "완료";
-    this.finishProject(raw);
-  },
-  finishProject(project) {
-    const totalWork = project.works.length;
-    const finishedWork = project.works.filter(
-      (work) => work.status === "완료"
-    ).length;
-    console.log(totalWork, finishedWork, "totalWork, finishedWork");
-    if (finishedWork / totalWork === 1) {
-      project.status = "완료";
-      this.finishedList.push(project);
-    }
-  },
-  isEqualWork(work1, work2) {
-    return (
-      work1.name === work2.name &&
-      work1.deadline === work2.deadline &&
-      work1.desc === work2.desc &&
-      work1.position === work2.position &&
-      work1.status === work2.status
-    );
   },
   // checkEnd() {
   //   const check = this.List.forEach((list) =>
@@ -94,7 +71,13 @@ export const projectPlanList = reactive({
   findProject(item) {
     const raw = this.findWorks(item);
     const result = this.List.find((list) => list.index === raw.parentIdx);
-    console.log("result", result);
+    // console.log("result", result);
     return result;
+  },
+  callFinishedList() {
+    return this.finishedList;
+  },
+  findProject2(item) {
+    return this.List.find((list) => list.index === item.parentIdx);
   },
 });

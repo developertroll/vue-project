@@ -22,7 +22,7 @@
           <span class="percentage-label">기한</span>
         </template>
       </el-progress>
-      <el-progress :percentage="progress" type="circle">
+      <el-progress :percentage="100" type="circle">
         <template #default="{ percentage }">
           <span class="percentage-value">{{ percentage }}%</span>
           <span class="percentage-label">진행도</span>
@@ -64,7 +64,7 @@ import { projectPlanList } from "@/composables/projectPlanList";
 import ShowAllocate from "./ShowAllocate.vue";
 import moment from "moment";
 export default {
-  name: "projectOngoingCard",
+  name: "projectCompletedCard",
   components: {
     ShowAllocate,
   },
@@ -123,11 +123,6 @@ export default {
       return Math.round(
         (current.diff(start, "days") / end.diff(start, "days")) * 100
       );
-    },
-    progress() {
-      const workList = projectPlanList.callWorkList(this.project).works;
-      const doneList = workList.filter((item) => item.status === "완료");
-      return Math.round((doneList.length / workList.length) * 100);
     },
     description() {
       return this.project.desc;

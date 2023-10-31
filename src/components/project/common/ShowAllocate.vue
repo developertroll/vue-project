@@ -5,9 +5,14 @@
     <el-table-column prop="position" label="업무"></el-table-column>
     <el-table-column prop="deadLine" label="마감일"></el-table-column>
     <el-table-column prop="status" label="상태"></el-table-column>
-    <el-table-column v-if="onGoing">
+    <el-table-column v-if="onGoing" label="작업">
       <template #default="scope">
-        <createWorkProgress :work="scope.row" :project="project" />
+        <createWorkProgress
+          :work="scope.row"
+          :project="project"
+          v-if="scope.row.status === '진행중'"
+        />
+        <div v-else>작업완료</div>
       </template>
     </el-table-column>
   </el-table>
@@ -47,7 +52,13 @@ export default {
   computed: {
     workData() {
       const newList = [];
-      this.project.works.forEach((item) => {
+      let workList;
+      if (this.project.works === undefined) {
+        workList = projectPlanList.callWorkList(this.project).works;
+      } else {
+        workList = this.project.works;
+      }
+      workList.forEach((item) => {
         newList.push({
           name: item.name,
           position: item.position,
@@ -59,7 +70,7 @@ export default {
       return newList;
     },
     onGo() {
-      return this.onGoing === "true";
+      return this.onGoing;
     },
   },
 };
