@@ -11,7 +11,12 @@
       </div>
     </template>
     <!-- 프로젝트가 가진 내용물 -->
-    <el-card border v-for="(value, key, index) in form" :key="index">
+    <el-card
+      border
+      v-for="(value, key, index) in form"
+      :key="index"
+      class="card"
+    >
       <template #header>
         <div class="card-header">
           {{ translateKey[key] }}
@@ -100,5 +105,8 @@ export default {
   padding: 0.5rem;
   color: white;
   text-align: center;
+}
+.card {
+  margin: 1rem;
 }
 </style>

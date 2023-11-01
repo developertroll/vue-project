@@ -91,6 +91,7 @@ import { projectPlanList } from "@/composables/projectPlanList";
 import { ElMessageBox } from "element-plus";
 import moment from "moment";
 import { ApprovalList } from "@/composables/approvalList";
+import { ref, watch } from "vue";
 export default {
   name: "createPlan",
   components: {
@@ -99,17 +100,22 @@ export default {
     AllocateWorkV2,
   },
   emits: ["savePlan"],
-
+  props: {
+    projectData: {
+      type: Object,
+      default: () => {},
+    },
+  },
   data() {
     return {
-      form: {
-        title: "",
-        date1: [],
-        works: [],
-        desc: "",
-        Partipacants: [],
-        update: "",
-      },
+      // form: {
+      //   title: "",
+      //   date1: [],
+      //   works: [],
+      //   desc: "",
+      //   Partipacants: [],
+      //   update: "",
+      // },
       ApprovalList,
       rules: {
         title: [
@@ -161,35 +167,22 @@ export default {
         this.projectData !== null
       );
     },
-    // form() {
-    //   if (this.hasInput) {
-    //     console.log("form", this.projectData);
-    //     return this.projectData;
-    //   } else {
-    //     return {
-    //       title: "",
-    //       date1: [],
-    //       works: [],
-    //       desc: "",
-    //       Partipacants: [],
-    //       update: "",
-    //     };
-    //   }
-    // },
+    originalTitle() {
+      return this.projectData.title;
+    },
   },
   methods: {
     onSubmit() {
       this.$message({
         type: "success",
         message:
-          "프로젝트 계획이 작성되었습니다. 승인이 끝나면 프로젝트가 시작됩니다.",
+          "프로젝트 수정 계획안이 작성되었습니다. 승인이 끝나면 프로젝트가 시작됩니다.",
       });
       console.log("submit!");
       console.log(this.form);
       this.form.update = moment().format("YYYY-MM-DD");
-
-      this.ApprovalList.request(this.form, "계획", "요청");
-
+      const newForm = { ...this.form, originalTitle: this.originalTitle };
+      this.ApprovalList.request(newForm, "계획", "수정");
       console.log(this.projectPlanList.List);
       this.$emit("savePlan");
     },
@@ -243,6 +236,29 @@ export default {
     changeCommit(item) {
       this.Committed = item;
     },
+  },
+  setup(props) {
+    const form = ref({
+      title: "",
+      date1: [],
+      works: [],
+      desc: "",
+      Partipacants: [],
+      update: "",
+      originalTitle: "",
+    });
+    watch(
+      () => props.projectData,
+      (newProjectData) => {
+        if (newProjectData) {
+          Object.assign(form.value, newProjectData);
+        }
+      },
+      { immediate: true }
+    );
+    return {
+      form,
+    };
   },
 };
 </script>

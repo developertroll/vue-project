@@ -10,13 +10,16 @@ export const ApprovalList = reactive({
   completion(newList) {
     let raw = "";
     let index = "";
+    console.log(newList);
     switch (newList.type) {
       case "계획":
         raw = this.requestList.find((list) => list.title === newList.title);
         projectPlanList.saveList(newList);
         this.completeList.push(newList);
-        index = this.requestList.indexOf(raw);
-        this.requestList.splice(index, 1);
+        index = this.requestList.findIndex((list) => list.title === raw.title);
+        if (index !== -1) {
+          this.requestList.splice(index, 1);
+        }
         break;
       case "업무":
         // raw = this.requestList.find(
@@ -56,5 +59,38 @@ export const ApprovalList = reactive({
       (list) => list.title === item.title || list.name === item.name
     );
     raw.status = status;
+  },
+  modifyCompletion(item) {
+    try {
+      const raw = this.requestList.find(
+        (list) =>
+          list.title === item.title ||
+          list.name === item.name ||
+          list.title === item.originalTitle
+      );
+      console.log(raw, "raw");
+      if (raw === undefined) {
+        console.error("No matching item found in requestList");
+        return;
+      }
+      console.log(projectPlanList.List, "this.projectPlanList.List");
+      const dataRaw = projectPlanList.List.find(
+        (list) => list.index === raw.index
+      );
+      if (dataRaw === undefined) {
+        console.error("No matching item found in projectPlanList.List");
+        return;
+      }
+      console.log(dataRaw, "dataRaw");
+      console.log(item, "item");
+      projectPlanList.modifySaveList(dataRaw, item);
+      this.completeList.push(raw);
+      let index = this.requestList.indexOf(raw);
+      if (index !== -1) {
+        this.requestList.splice(index, 1);
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
   },
 });

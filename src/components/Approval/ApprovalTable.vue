@@ -66,18 +66,15 @@ export default {
         }
       )
         .then(() => {
-          // console.log("then 넘어감");
-          // console.log(this.selectedRow);
           for (const element of this.selectedRow) {
-            // console.log(element);
             let original = this.ApprovalList.findList(element);
-            // console.log(original);
-            this.ApprovalList.changeStatus(original, type);
-            if (type === "승인") {
+            if (original.status === "수정") {
+              this.ApprovalList.changeStatus(original, type);
+              this.ApprovalList.modifyCompletion(original);
+            } else if (type === "승인") {
+              this.ApprovalList.changeStatus(original, type);
               this.ApprovalList.completion(original);
             }
-
-            // type이 '승인' 일 경우 approvalList에서 completion 함수를 실행시킴
           }
           this.$message({
             type: "success",
