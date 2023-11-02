@@ -1,5 +1,5 @@
 <template lang="">
-  <div class="buttons">
+  <div class="buttons" v-if="projectPlan">
     <el-button type="primary" @click="createPlan">생성</el-button>
     <el-tooltip :disabled="!multiCheck" :content="modifyButton" placement="top">
       <el-button type="warning" :disabled="multiCheck" @click="modifyPlan"
@@ -23,19 +23,34 @@
     @selection-change="handleSelect"
   >
     <el-table-column type="selection" width="55" />
-    <el-table-column prop="title" label="제목" />
-    <el-table-column prop="desc" label="이름" />
+    <el-table-column prop="title" label="제목">
+      <template #default="scope">
+        <DocumentedProjectV2 :project="scope.row" />
+      </template>
+    </el-table-column>
+    <el-table-column prop="desc" label="설명" />
     <el-table-column prop="member" label="참가인원" />
     <el-table-column prop="status" label="상태" />
+    <el-table-column prop="startDate" label="시작일" />
   </el-table>
 </template>
 <script>
 import { projectPlanList } from "@/composables/projectPlanList";
 import moment from "moment";
 import { ElMessageBox } from "element-plus";
+import DocumentedProjectV2 from "../Approval/DocumentedProjectV2.vue";
 export default {
   name: "projectPlan",
   emits: ["createPlan", "modifyPlan", "deletePlan"],
+  components: {
+    DocumentedProjectV2,
+  },
+  props: {
+    projectPlan: {
+      type: Boolean,
+      default: true,
+    },
+  },
   data() {
     return {
       currentProject: null,
@@ -53,33 +68,68 @@ export default {
     PlanList() {
       const newList = [];
       const rawList = this.projectPlanList.callPlanList();
-      rawList.forEach((item) => {
-        let text = "";
-        let status = "";
-        item.Partipacants.forEach((member, index) => {
-          if (index + 1 !== item.Partipacants.length) {
-            text += member.name + ", ";
-          } else if (index + 1 === item.Partipacants.length) {
-            text += member.name;
-          }
-          let startDate = moment(item.date1[0]);
-          let currentDate = moment();
-          let startDiff = currentDate.diff(startDate, "days");
+      if (this.projectPlan) {
+        rawList.forEach((item) => {
+          let text = "";
+          let status = "";
+          item.Partipacants.forEach((member, index) => {
+            if (index + 1 !== item.Partipacants.length) {
+              text += member.name + ", ";
+            } else if (index + 1 === item.Partipacants.length) {
+              text += member.name;
+            }
+            let startDate = moment(item.date1[0]);
+            let currentDate = moment();
+            let startDiff = currentDate.diff(startDate, "days");
 
-          if (startDiff < 0) {
-            status = "진행예정";
-          } else {
-            status = item.status;
+            if (startDiff < 0) {
+              status = "진행예정";
+            } else {
+              status = item.status;
+            }
+          });
+          newList.push({
+            title: item.title,
+            desc: item.desc,
+            member: text,
+            status: status,
+            startDate: item.date1[0],
+          });
+        });
+        return newList;
+      } else {
+        let currentDate = moment();
+        rawList.forEach((item) => {
+          if (moment(item.date1[0]).diff(currentDate, "days") > 0) {
+            let text = "";
+            let status = "";
+            item.Partipacants.forEach((member, index) => {
+              if (index + 1 !== item.Partipacants.length) {
+                text += member.name + ", ";
+              } else if (index + 1 === item.Partipacants.length) {
+                text += member.name;
+              }
+              let startDate = moment(item.date1[0]);
+              let currentDate = moment();
+              let startDiff = currentDate.diff(startDate, "days");
+
+              if (startDiff < 0) {
+                status = "진행예정";
+              } else {
+                status = item.status;
+              }
+            });
+            newList.push({
+              title: item.title,
+              desc: item.desc,
+              member: text,
+              status: status,
+              startDate: item.date1[0],
+            });
           }
         });
-        newList.push({
-          title: item.title,
-          desc: item.desc,
-          member: text,
-          status: status,
-        });
-      });
-      return newList;
+        return newList;
+      }
     },
     multiCheck() {
       return this.onGoingCheck || this.selectedRow.length > 1;
@@ -149,6 +199,7 @@ export default {
 <style scoped>
 .buttons {
   margin-top: 1rem;
+  margin-bottom: 1rem;
   display: flex;
   justify-content: flex-end;
 }

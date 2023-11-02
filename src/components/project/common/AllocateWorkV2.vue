@@ -23,12 +23,9 @@
   <el-table :data="workData" border>
     <el-table-column width="60" label="삭제">
       <template #default="scope">
-        <el-button
-          type="danger"
-          :icon="Delete"
-          @click="deleteRow(scope.row)"
-          circle
-        />
+        <el-button type="danger" @click="deleteRow(scope.row)" circle>
+          <el-icon><Delete /></el-icon>
+        </el-button>
       </template>
     </el-table-column>
     <el-table-column label="담당자" props="name">
@@ -99,12 +96,14 @@ import { JobList } from "@/composables/jobList";
 export default {
   name: "ShowAllocate",
   emits: ["saveWorks", "commitEdit"],
+  components: {
+    Delete,
+  },
   data() {
     return {
       workData: [],
       Status: true,
       JobList,
-      Delete,
     };
   },
   props: {
@@ -127,6 +126,12 @@ export default {
         };
       },
     },
+    parentWork: {
+      type: Array,
+      default: () => {
+        return [];
+      },
+    },
   },
   methods: {
     addRow() {
@@ -135,7 +140,7 @@ export default {
         position: "",
         desc: "",
         deadLine: "",
-        status: "B",
+        status: "진행중",
       });
     },
     saveWork() {
@@ -167,6 +172,9 @@ export default {
           };
         });
         this.workData = defaultValue;
+      } else {
+        console.log(this.parentWork);
+        this.workData = this.parentWork;
       }
     },
     clearData() {

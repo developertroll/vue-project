@@ -1,15 +1,24 @@
 <template lang="">
-  <template v-for="item in calledList" :key="item.title">
-    <projectOngoingCard :project="item" />
-  </template>
+  <el-tabs type="border-card">
+    <el-tab-pane label="대기중">
+      <showPlan :projectPlan="false" />
+    </el-tab-pane>
+    <el-tab-pane label="진행중">
+      <template v-for="item in calledList" :key="item.title">
+        <projectOngoingCard :project="item" />
+      </template>
+    </el-tab-pane>
+  </el-tabs>
 </template>
 <script>
 import projectOngoingCard from "./common/projectOngoingCard.vue";
 import { projectPlanList } from "@/composables/projectPlanList";
+import showPlan from "./showPlan.vue";
 export default {
   name: "projectOngoing",
   components: {
     projectOngoingCard,
+    showPlan,
   },
   data() {
     return {

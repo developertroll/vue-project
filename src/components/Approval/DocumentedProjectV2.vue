@@ -44,6 +44,7 @@
 </template>
 <script>
 import { ApprovalList } from "@/composables/approvalList";
+import { projectPlanList } from "@/composables/projectPlanList";
 import showMemberV2 from "./../project/showMemberV2.vue";
 import ShowAllocate from "./../project/common/ShowAllocate.vue";
 export default {
@@ -72,7 +73,7 @@ export default {
         desc: "내용",
         Partipacants: "참가 인원",
         update: "날짜 업데이트",
-        type: "결재 종류",
+        type: "종류",
         status: "결재 상태",
       },
     };
@@ -90,8 +91,23 @@ export default {
   },
   computed: {
     form() {
-      const newList = ApprovalList.findList(this.project);
-      return newList;
+      try {
+        let newList;
+        if (this.project && this.project.type) {
+          newList = ApprovalList.findList(this.project);
+        } else if (this.project && this.project.title) {
+          let { work, project } = projectPlanList.findWorkAndProject(
+            this.project.title
+          );
+          newList = { ...project, works: work };
+          delete newList.index;
+          console.log(newList);
+        }
+        return newList;
+      } catch (error) {
+        console.log(error);
+        return this.data;
+      }
     },
   },
 };

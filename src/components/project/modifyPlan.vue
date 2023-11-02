@@ -65,6 +65,7 @@
           @saveWorks="saveWork"
           :parentDate="form.date1"
           @commitEdit="changeCommit"
+          :parentWork="findWorks"
         />
       </el-form-item>
       <el-divider />
@@ -169,6 +170,13 @@ export default {
     },
     originalTitle() {
       return this.projectData.title;
+    },
+    findWorks() {
+      const workIdx = this.projectData.index;
+      const workList = this.projectPlanList.workList.find(
+        (item) => item.parentIdx === workIdx
+      );
+      return workList.works;
     },
   },
   methods: {

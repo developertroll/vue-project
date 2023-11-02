@@ -1,8 +1,9 @@
 import { reactive } from "vue";
 import { projectPlanList } from "./projectPlanList";
+import VueCookies from "vue-cookies";
 export const ApprovalList = reactive({
-  requestList: [],
-  completeList: [],
+  requestList: VueCookies.get("requestList") || [],
+  completeList: VueCookies.get("completeList") || [],
   request(newList, types, status) {
     const addType = { ...newList, type: types, status: status };
     this.requestList.push(addType);
@@ -92,5 +93,13 @@ export const ApprovalList = reactive({
     } catch (error) {
       console.error("An error occurred:", error);
     }
+  },
+  setCookies() {
+    VueCookies.set("requestList", this.requestList);
+    VueCookies.set("completeList", this.completeList);
+  },
+  getCookies() {
+    this.requestList = VueCookies.get("requestList");
+    this.completeList = VueCookies.get("completeList");
   },
 });

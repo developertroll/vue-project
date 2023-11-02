@@ -1,9 +1,10 @@
 import { reactive } from "vue";
+import VueCookies from "vue-cookies";
 
 export const projectPlanList = reactive({
-  List: [],
-  workList: [],
-  finishedList: [],
+  List: VueCookies.get("projectPlanList") || [],
+  workList: VueCookies.get("workList") || [],
+  finishedList: VueCookies.get("finishedList") || [],
   //workList는 계획단계를 넘어간 진행단계에 있는 프로젝트들의 업무가 사용할 테이블. 이렇게 하면 계획안에 있던 내용을 보면서도 진행 중간 업무가 변경되더라도 계획안이 안바뀜.
   saveList(newList, originalIdx = undefined) {
     console.log(newList);
@@ -28,6 +29,7 @@ export const projectPlanList = reactive({
       console.log(workPush);
       this.workList.push(workPush);
     }
+    this.setCookies();
   },
   callWorkList(project) {
     const raw = this.workList.find((list) => list.parentIdx === project.index);
@@ -66,6 +68,7 @@ export const projectPlanList = reactive({
       const idx = this.workList.indexOf(parentList);
       this.workList.splice(idx, 1);
     }
+    this.setCookies();
   },
   // checkEnd() {
   //   const check = this.List.forEach((list) =>
@@ -97,25 +100,16 @@ export const projectPlanList = reactive({
     return result;
   },
   findWorkAndProject(title) {
-    console.log("입장", title);
-    console.log("플젝리스트", this.List);
-    console.log("업무리스트", this.workList);
-
-    let work, project;
-
-    for (let i = 0; i < this.workList.length; i++) {
-      work = this.workList[i].works.find((list) => list.name === title);
-      if (work) {
-        project = this.List.find(
-          (list) => list.index === this.workList[i].parentIdx
-        );
-        break;
+    const project = this.List.find((list) => list.title === title);
+    let work;
+    if (project) {
+      const workList = this.workList.find(
+        (list) => list.parentIdx === project.index
+      );
+      if (workList) {
+        work = workList.works;
       }
     }
-
-    console.log("work", work);
-    console.log("project", project);
-
     return { work, project };
   },
   callFinishedList() {
@@ -139,5 +133,15 @@ export const projectPlanList = reactive({
     this.deletePlanWork(original);
     delete newWork.originalTitle;
     this.saveList(newWork, originalIdx);
+  },
+  setCookies() {
+    VueCookies.set("projectPlanList", this.List);
+    VueCookies.set("workList", this.workList);
+    VueCookies.set("finishedList", this.finishedList);
+  },
+  getCookies() {
+    this.List = VueCookies.get("projectPlanList");
+    this.workList = VueCookies.get("workList");
+    this.finishedList = VueCookies.get("finishedList");
   },
 });

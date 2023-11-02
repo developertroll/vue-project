@@ -40,7 +40,7 @@ export default {
           position: "",
           desc: "",
           deadLine: "",
-          status: "B",
+          status: "진행중",
         };
       },
     },
