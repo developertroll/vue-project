@@ -1,7 +1,7 @@
 <template lang="">
   <el-tabs type="border-card">
     <el-tab-pane label="대기중">
-      <showPlan :projectPlan="false" />
+      <showPlan :projectPlan="'진행'" />
     </el-tab-pane>
     <el-tab-pane label="진행중">
       <template v-for="item in calledList" :key="item.title">

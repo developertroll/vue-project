@@ -7,7 +7,11 @@
     <el-button type="danger">삭제</el-button>
   </div> -->
   <div v-if="currentProject">
-    <showPlan @createPlan="change" @modifyPlan="change2" />
+    <showPlan
+      @createPlan="change"
+      @modifyPlan="change2"
+      :projectPlan="'예정'"
+    />
   </div>
   <div v-else>
     <createPlan

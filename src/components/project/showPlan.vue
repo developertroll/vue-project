@@ -1,5 +1,5 @@
 <template lang="">
-  <div class="buttons" v-if="projectPlan">
+  <div class="buttons" v-if="projectPlan === '예정'">
     <el-button type="primary" @click="createPlan">생성</el-button>
     <el-tooltip :disabled="!multiCheck" :content="modifyButton" placement="top">
       <el-button type="warning" :disabled="multiCheck" @click="modifyPlan"
@@ -47,8 +47,11 @@ export default {
   },
   props: {
     projectPlan: {
-      type: Boolean,
-      default: true,
+      type: String,
+      default: "예정",
+      validator: (value) => {
+        return ["예정", "진행", "완료"].includes(value);
+      },
     },
   },
   data() {
@@ -66,70 +69,45 @@ export default {
   },
   computed: {
     PlanList() {
-      const newList = [];
       const rawList = this.projectPlanList.callPlanList();
-      if (this.projectPlan) {
-        rawList.forEach((item) => {
-          let text = "";
-          let status = "";
-          item.Partipacants.forEach((member, index) => {
-            if (index + 1 !== item.Partipacants.length) {
-              text += member.name + ", ";
-            } else if (index + 1 === item.Partipacants.length) {
-              text += member.name;
-            }
-            let startDate = moment(item.date1[0]);
-            let currentDate = moment();
-            let startDiff = currentDate.diff(startDate, "days");
+      const filteredList = rawList.filter((item) => {
+        const startDate = moment(item.date1[0]);
+        const currentDate = moment();
+        const startDiff = currentDate.diff(startDate, "days");
+        const status =
+          item.status === "완료"
+            ? "완료"
+            : startDiff < 0
+            ? "진행예정"
+            : item.status;
 
-            if (startDiff < 0) {
-              status = "진행예정";
-            } else {
-              status = item.status;
-            }
-          });
-          newList.push({
-            title: item.title,
-            desc: item.desc,
-            member: text,
-            status: status,
-            startDate: item.date1[0],
-          });
-        });
-        return newList;
-      } else {
-        let currentDate = moment();
-        rawList.forEach((item) => {
-          if (moment(item.date1[0]).diff(currentDate, "days") > 0) {
-            let text = "";
-            let status = "";
-            item.Partipacants.forEach((member, index) => {
-              if (index + 1 !== item.Partipacants.length) {
-                text += member.name + ", ";
-              } else if (index + 1 === item.Partipacants.length) {
-                text += member.name;
-              }
-              let startDate = moment(item.date1[0]);
-              let currentDate = moment();
-              let startDiff = currentDate.diff(startDate, "days");
-
-              if (startDiff < 0) {
-                status = "진행예정";
-              } else {
-                status = item.status;
-              }
-            });
-            newList.push({
-              title: item.title,
-              desc: item.desc,
-              member: text,
-              status: status,
-              startDate: item.date1[0],
-            });
-          }
-        });
-        return newList;
-      }
+        if (this.projectPlan === "완료" && status !== "완료") {
+          return false;
+        }
+        if (this.projectPlan === "진행" && status !== "진행예정") {
+          return false;
+        }
+        return true;
+      });
+      return filteredList.map((item) => {
+        const text = item.Partipacants.map((member) => member.name).join(", ");
+        const startDate = moment(item.date1[0]);
+        const currentDate = moment();
+        const startDiff = currentDate.diff(startDate, "days");
+        const status =
+          item.status === "완료"
+            ? "완료"
+            : startDiff < 0
+            ? "진행예정"
+            : item.status;
+        return {
+          title: item.title,
+          desc: item.desc,
+          member: text,
+          status: status,
+          startDate: item.date1[0],
+        };
+      });
     },
     multiCheck() {
       return this.onGoingCheck || this.selectedRow.length > 1;

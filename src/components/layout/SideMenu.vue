@@ -73,8 +73,14 @@ export default {
           icon: "location",
           submenus: [
             { label: "결재", index: "ApprovalMain", path: "Approval" },
-            { label: "구성원", index: "orgMember", path: "org" },
+            { label: "구성원", index: "orgChart", path: "org" },
           ],
+        },
+        {
+          label: "관리자",
+          index: "admin",
+          icon: "setting",
+          submenus: [{ label: "구성원 관리", index: "addUser", path: "admin" }],
         },
       ],
     });

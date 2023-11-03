@@ -1,7 +1,9 @@
 <template>
   <el-card type="card" class="main-content">
     <h1 class="content-title">{{ contents.label }}</h1>
-    <component :is="targetComponent" class="target-component" />
+    <div class="target-component">
+      <component :is="targetComponent" />
+    </div>
   </el-card>
 </template>
 <script>

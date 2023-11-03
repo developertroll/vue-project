@@ -94,7 +94,12 @@ export default {
       try {
         let newList;
         if (this.project && this.project.type) {
-          newList = ApprovalList.findList(this.project);
+          if (this.project.status) {
+            newList = this.project;
+          } else {
+            newList = ApprovalList.findList(this.project);
+          }
+          console.log(newList);
         } else if (this.project && this.project.title) {
           let { work, project } = projectPlanList.findWorkAndProject(
             this.project.title
@@ -108,6 +113,13 @@ export default {
         console.log(error);
         return this.data;
       }
+    },
+  },
+  watch: {
+    project: {
+      handler() {
+        console.log(this.project);
+      },
     },
   },
 };

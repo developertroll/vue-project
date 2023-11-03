@@ -1,8 +1,4 @@
 <template lang="">
-  <div>
-    <h2>결재 테이블</h2>
-    <!-- 해당 테이블은 결재요청이 들어온 모든 프로젝트를 담당하는 페이지, 클릭을 할 시 dialog가 떠 해당 결재요청이 들어온 문서의 내용이 보이며 버튼을 눌러 승인,반려,취소,삭제가 가능함 -->
-  </div>
   <div class="buttons">
     <el-button type="primary" @click="approvalSubmit('승인')">승인</el-button>
     <el-button type="danger" @click="approvalSubmit('반려')">반려</el-button>
@@ -13,6 +9,7 @@
     :data="appData"
     style="width: 100%"
     @selection-change="handleSelect"
+    border
   >
     <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column prop="type" label="종류"></el-table-column>

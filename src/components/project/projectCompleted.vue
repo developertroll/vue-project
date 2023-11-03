@@ -10,7 +10,7 @@
       </template>
     </div>
     <div v-else>
-      <showPlan :projectPlan="false" />
+      <showPlan :projectPlan="'완료'" />
     </div>
   </div>
   <!-- <showPlan :projectPlan="false" v-if="(pageLayOut = '테이블형')" /> -->

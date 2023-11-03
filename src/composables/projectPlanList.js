@@ -134,6 +134,31 @@ export const projectPlanList = reactive({
     delete newWork.originalTitle;
     this.saveList(newWork, originalIdx);
   },
+  findWorkByName(name) {
+    const works = this.workList.flatMap((list) =>
+      list.works.filter((work) => work.name === name)
+    );
+    return works;
+  },
+  findProjectByName(name) {
+    // name을 가지는 workList 내부 works를 찾고, 그 works를 가지는 workList 내부 {}에서 parentIdx를 찾아 해당 parentIdx와 같은 index를 가지는 List 내부 {}를 찾아서 반환
+    const works = this.findWorkByName(name);
+    const workList = this.workList.find((list) => list.works === works);
+    const parentIdx = workList.parentIdx;
+    const project = this.List.find((list) => list.index === parentIdx);
+    return project;
+  },
+  findProjectByWork(work) {
+    const workListEntry = this.workList.find((list) =>
+      list.works.find((list2) => list2 === work)
+    );
+    if (!workListEntry) {
+      return null; // or throw an error, or handle this case differently
+    }
+    const parentIdx = workListEntry.parentIdx;
+    const project = this.List.find((list) => list.index === parentIdx);
+    return project;
+  },
   setCookies() {
     VueCookies.set("projectPlanList", this.List);
     VueCookies.set("workList", this.workList);
