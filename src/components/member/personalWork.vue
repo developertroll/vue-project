@@ -32,6 +32,7 @@ export default {
     },
     projectTable() {
       const rawList = projectPlanList.findWorkByName(this.memberName.name);
+      console.log(rawList);
       return rawList;
     },
   },

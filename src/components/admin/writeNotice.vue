@@ -1,7 +1,32 @@
 <template lang="">
-  <div></div>
+  <el-form :label-position="left">
+    <el-form-item label="제목">
+      <el-input></el-input>
+    </el-form-item>
+    <el-form-item label="내용">
+      <el-input type="textarea"></el-input>
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary">Submit</el-button>
+      <el-button>Cancel</el-button>
+    </el-form-item>
+  </el-form>
 </template>
 <script>
-export default {};
+import moment from "moment";
+export default {
+  name: "writeNotice",
+  data() {
+    return {
+      form: {
+        title: "",
+        content: "",
+        update: moment().format("YYYY-MM-DD"),
+        view: 0,
+      },
+    };
+  },
+  methods: {},
+};
 </script>
 <style lang=""></style>
