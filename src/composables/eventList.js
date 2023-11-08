@@ -1,10 +1,19 @@
 import { reactive } from "vue";
 import VueCookies from "vue-cookies";
 import { projectPlanList } from "./projectPlanList";
+import lzString from "lz-string";
 
 export const eventList = reactive({
-  eventList: VueCookies.get("eventList") || [],
-  detailList: VueCookies.get("detailList") || [],
+  eventList: VueCookies.get("eventList")
+    ? JSON.parse(
+        lzString.decompressFromEncodedURIComponent(VueCookies.get("eventList"))
+      )
+    : [],
+  detailList: VueCookies.get("detailList")
+    ? JSON.parse(
+        lzString.decompressFromEncodedURIComponent(VueCookies.get("detailList"))
+      )
+    : [],
   eventTemplate: {
     title: "",
     start: "",
@@ -38,6 +47,8 @@ export const eventList = reactive({
         start: item.deadLine,
         allDay: true,
         backgroundColor: "#f56954",
+        type: "work",
+        id: -1,
       });
     });
     this.memberSpecificEventList = newEvent;
@@ -47,7 +58,18 @@ export const eventList = reactive({
       list.id = this.eventList.length + 1;
     }
     this.eventList.push(list);
-    VueCookies.set("eventList", this.eventList);
+    console.log(this.eventList);
+    const compressedEventList = lzString.compressToEncodedURIComponent(
+      JSON.stringify(this.eventList)
+    );
+    VueCookies.set("eventList", compressedEventList);
+    const savedEventList = JSON.parse(
+      lzString.decompressFromEncodedURIComponent(VueCookies.get("eventList"))
+    );
+    console.log(savedEventList, "savedEventList");
+    if (!savedEventList || savedEventList.length !== this.eventList.length) {
+      console.error("Failed to save the event list to the cookie.");
+    }
   },
   setEventByProjects() {
     const rawData = projectPlanList.callPlanList();

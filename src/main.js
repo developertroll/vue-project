@@ -10,7 +10,7 @@ import "element-plus/dist/index.css";
 import "@/styles/main.css";
 const app = createApp(App);
 app.use(VueCookies, {
-  expireTimes: "30d",
+  expireTimes: "14d",
   secure: true,
 });
 app.use(ElementPlus, { locale: ko });

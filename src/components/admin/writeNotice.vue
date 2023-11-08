@@ -1,13 +1,13 @@
 <template lang="">
-  <el-form :label-position="left">
+  <el-form :label-position="left" v-model="form">
     <el-form-item label="제목">
-      <el-input></el-input>
+      <el-input v-model="form.title"></el-input>
     </el-form-item>
     <el-form-item label="내용">
-      <el-input type="textarea"></el-input>
+      <el-input type="textarea" v-model="form.content"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary">Submit</el-button>
+      <el-button type="primary" @click="onSubmit">Submit</el-button>
       <el-button>Cancel</el-button>
     </el-form-item>
   </el-form>
@@ -26,7 +26,9 @@ export default {
       },
     };
   },
-  methods: {},
+  methods: {
+    onSubmit() {},
+  },
 };
 </script>
 <style lang=""></style>

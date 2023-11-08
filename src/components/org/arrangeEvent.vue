@@ -1,5 +1,5 @@
 <template lang="">
-  <el-dialog v-model="display">
+  <el-dialog v-model="display" destroy-on-close>
     <template #header>
       <span>일정 만들기</span>
     </template>
@@ -59,13 +59,18 @@ export default {
       this.handleClose();
     },
     handleClose() {
+      this.form = {
+        title: "",
+        member: [],
+        desc: "",
+      };
       this.display = false;
     },
   },
   watch: {
     //Date에 변화가 생기면 display를 true로 바꿔준다.
     Date() {
-      this.display = true;
+      if (this.Date.length !== 0) this.display = true;
     },
   },
 };

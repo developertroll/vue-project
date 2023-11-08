@@ -47,6 +47,7 @@ export default {
           submenus: [
             { label: "조직도", index: "orgChart", path: "org" },
             { label: "구성원", index: "orgMember", path: "org" },
+            { label: "일정표", index: "orgCalendar", path: "org" },
           ],
         },
         {
@@ -80,7 +81,10 @@ export default {
           label: "관리자",
           index: "admin",
           icon: "setting",
-          submenus: [{ label: "구성원 관리", index: "addUser", path: "admin" }],
+          submenus: [
+            { label: "구성원 관리", index: "addUser", path: "admin" },
+            { label: "공지 작성", index: "writeNotice", path: "admin" },
+          ],
         },
       ],
     });
