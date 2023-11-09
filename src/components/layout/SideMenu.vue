@@ -84,6 +84,7 @@ export default {
           submenus: [
             { label: "구성원 관리", index: "addUser", path: "admin" },
             { label: "공지 작성", index: "writeNotice", path: "admin" },
+            { label: "공지 게시판", index: "noticeMain", path: "mainPage" },
           ],
         },
       ],

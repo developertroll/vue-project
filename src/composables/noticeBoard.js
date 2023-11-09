@@ -23,7 +23,7 @@ export const noticeBoard = reactive({
       this.boardList[idx] = { ...newList, index: idx };
     } else {
       const idx = this.boardList.length;
-      this.boardList.push({ ...newList, index: idx });
+      this.boardList.unshift({ ...newList, index: idx });
     }
     VueCookies.set("boardList", this.boardList);
   },
@@ -42,5 +42,19 @@ export const noticeBoard = reactive({
   findListByDate(date) {
     const raw = this.boardList.find((list) => list.date.includes(date));
     return raw;
+  },
+  updateView(list) {
+    const idx = list.index;
+    const raw = this.boardList.find((list) => list.index === idx);
+    raw.views += 1;
+    VueCookies.set("boardList", this.boardList);
+  },
+  showPage(number) {
+    //number를 5로 나눠 몫, 나머지를 찾고 몫*5를 인덱스 시작점으로, 이후 나머지 만큼 데이터를 보여줌.
+    // 예시: 페이지1은 인덱스 0부터 4까지, 페이지2는 인덱스 5부터 9까지
+    const startIdx = (number - 1) * 5;
+    const endIdx = startIdx + 4;
+    const result = this.boardList.slice(startIdx, endIdx + 1);
+    return result;
   },
 });

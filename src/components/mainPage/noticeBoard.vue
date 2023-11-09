@@ -1,5 +1,24 @@
 <template lang="">
-  <div></div>
+  <el-table :data="noticeList">
+    <el-table-column label="번호" prop="index" />
+    <el-table-column label="제목">
+      <template #default="scope">
+        <el-button type="primary" @click="noticeView(scope.row)" text>
+          {{ scope.row.title }}
+        </el-button>
+      </template>
+    </el-table-column>
+    <el-table-column label="작성일" prop="update" />
+    <el-table-column label="조회수" prop="views" />
+  </el-table>
+  <div class="page">
+    <el-pagination
+      layout="prev, pager, next"
+      :total="total"
+      background
+      @current-change="showPage"
+    />
+  </div>
   <writeNotice v-if="admin" @submit="saveNotice" />
 </template>
 <script>
@@ -7,19 +26,43 @@ import writeNotice from "@/components/admin/writeNotice.vue";
 import { noticeBoard } from "@/composables/noticeBoard";
 export default {
   name: "noticeBoard",
+  emits: ["transition"],
   components: {
     writeNotice,
   },
   data() {
     return {
       admin: false,
+      currentPage: 1,
     };
   },
   methods: {
     saveNotice(item) {
       noticeBoard.saveNotice(item);
     },
+    noticeView(item) {
+      console.log(item);
+      noticeBoard.updateView(item);
+      this.$emit("transition", item);
+    },
+    showPage(number = 1) {
+      this.currentPage = number;
+    },
+  },
+  computed: {
+    noticeList() {
+      return noticeBoard.showPage(this.currentPage);
+    },
+    total() {
+      return noticeBoard.boardList.length;
+    },
   },
 };
 </script>
-<style lang=""></style>
+<style scoped>
+.page {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+</style>
