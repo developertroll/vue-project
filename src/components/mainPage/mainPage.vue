@@ -1,61 +1,86 @@
 <template lang="">
-  <el-col>
-    <el-row :span="12">{{ currentMember }}</el-row>
-    <el-row :span="12">님, 반갑습니다!</el-row>
-  </el-col>
-  <el-col>
-    <!-- 프로젝트 일정, 업무 -->
-    <el-row :span="8">
-      <el-card>
-        <template #header>
+  <div>{{ currentMember }}님, 반갑습니다!</div>
+  <!-- 프로젝트 일정, 업무 -->
+  <el-space wrap fill :fillRatio="90" size="large">
+    <el-card>
+      <template #header>
+        <div class="card-header">
           <span>진행중인 프로젝트</span>
-        </template>
-        <mainTable :currentMember="currentMember" :currentTable="projectPlan" />
-      </el-card>
-    </el-row>
-    <el-row :span="16">
-      <el-card>
-        <template #header>
+          <el-button type="primary" @click="handleClick(0)">상세</el-button>
+        </div>
+      </template>
+      <mainTable :currentMember="currentMember" currentTable="projectPlan" />
+    </el-card>
+    <el-card>
+      <template #header>
+        <div class="card-header">
           <span>진행중인 업무</span>
-        </template>
-      </el-card>
-      <mainTable :currentMember="currentMember" :currentTable="workList" />
-    </el-row>
-  </el-col>
-  <el-col>
+          <el-button type="primary" @click="handleClick(1)">상세</el-button>
+        </div>
+      </template>
+      <mainTable :currentMember="currentMember" currentTable="workList" />
+    </el-card>
     <!-- 공지사항, 당일 일정 -->
-    <el-row :span="12">
-      <el-card>
-        <template #header>
-          <span>공지사항</span>
-        </template>
-      </el-card>
-    </el-row>
-    <el-row :span="12">
-      <el-card>
-        <template #header>
+    <el-card>
+      <template #header>
+        <div class="card-header">
+          <span>최근 공지사항</span>
+          <el-button type="primary" @click="handleClick(2)">상세</el-button>
+        </div>
+      </template>
+      <noticeBoard :main="false" />
+    </el-card>
+    <el-card>
+      <template #header>
+        <div class="card-header">
           <span>오늘 일정</span>
-        </template>
-        <mainTable
-          :currentMember="currentMember"
-          :currentTable="eventList"
-        /> </el-card
-    ></el-row>
-  </el-col>
+          <el-button type="primary" @click="handleClick(3)">상세</el-button>
+        </div>
+      </template>
+      <mainTable :currentMember="currentMember" currentTable="eventList" />
+    </el-card>
+  </el-space>
 </template>
 <script>
+import noticeBoard from "./noticeBoard.vue";
 import mainTable from "./mainTable.vue";
 export default {
   name: "mainPage",
+  emits: ["handleMain"],
   components: {
     mainTable,
+    noticeBoard,
   },
-
   data() {
     return {
-      currentMember: "김철수",
+      currentMember: "김영희",
+      emitterMenus: [
+        { label: "프로젝트 계획", index: "projectPlan", path: "project" },
+        {
+          label: "진행중인 프로젝트",
+          index: "projectOngoing",
+          path: "project",
+        },
+        { label: "공지 게시판", index: "noticeMain", path: "mainPage" },
+        { label: "일정표", index: "orgCalendar", path: "org" },
+      ],
     };
+  },
+  methods: {
+    handleClick(number) {
+      this.$emit("handleMain", this.emitterMenus[number]);
+    },
   },
 };
 </script>
-<style lang=""></style>
+<style scoped>
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.card-header span {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+</style>

@@ -24,9 +24,9 @@ export default {
   data() {
     return {
       contents: {
-        label: "조직도",
-        index: "orgChart",
-        path: "org",
+        label: "메인 페이지",
+        index: "mainPage",
+        path: "mainPage",
       },
     };
   },

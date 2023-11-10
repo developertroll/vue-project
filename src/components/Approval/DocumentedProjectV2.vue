@@ -1,5 +1,8 @@
 <template lang="">
-  <el-button type="primary" plain @click="openDialog"
+  <el-button type="primary" plain @click="openDialog" v-if="isCollapse"
+    >...</el-button
+  >
+  <el-button type="primary" plain @click="openDialog" v-else
     >{{ form.title }}
   </el-button>
   <el-dialog v-model="test" append-to-body>
@@ -45,13 +48,22 @@
 <script>
 import { ApprovalList } from "@/composables/approvalList";
 import { projectPlanList } from "@/composables/projectPlanList";
+import useBreakPoint from "@/composables/useBreakPoint";
 import showMemberV2 from "./../project/showMemberV2.vue";
 import ShowAllocate from "./../project/common/ShowAllocate.vue";
+import { computed } from "vue";
 export default {
   name: "DocumentedProject",
   components: {
     showMemberV2,
     ShowAllocate,
+  },
+  setup() {
+    const { type } = useBreakPoint();
+    const isCollapse = computed(() => type.value === "sm");
+    return {
+      isCollapse,
+    };
   },
   data() {
     return {

@@ -1,8 +1,11 @@
 <template>
   <el-card type="card" class="main-content">
-    <h1 class="content-title">{{ contents.label }}</h1>
+    <h1 class="content-title" v-if="handlerExecuted">
+      {{ handlerComponent.label }}
+    </h1>
+    <h1 class="content-title" v-else>{{ contents.label }}</h1>
     <div class="target-component">
-      <component :is="targetComponent" />
+      <component :is="targetComponent" @handleMain="handlers" />
     </div>
   </el-card>
 </template>
@@ -15,9 +18,9 @@ export default {
       type: Object,
       default() {
         return {
-          label: "Test Menu",
-          path: "Test",
-          index: "TestMenu",
+          label: "메인 페이지",
+          path: "mainPage",
+          index: "mainPage",
         };
       },
     },
@@ -25,6 +28,8 @@ export default {
   data() {
     return {
       targetComponent: shallowRef(null),
+      handlerExecuted: false,
+      handlerComponent: null,
     };
   },
   watch: {
@@ -34,7 +39,18 @@ export default {
         this.targetComponent = defineAsyncComponent(() =>
           import(`./${newValue.path}/${newValue.index}.vue`)
         );
+        this.handlerExecuted = false;
       },
+      immediate: true,
+    },
+  },
+  methods: {
+    handlers(item) {
+      this.targetComponent = defineAsyncComponent(() =>
+        import(`./${item.path}/${item.index}.vue`)
+      );
+      this.handlerComponent = item;
+      this.handlerExecuted = true;
     },
   },
 };

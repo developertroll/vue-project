@@ -1,9 +1,9 @@
 <template lang="">
-  <el-table :data="noticeList">
-    <el-table-column label="번호" prop="index" />
+  <el-table :data="noticeList" table-layout="auto" border>
+    <el-table-column label="번호" prop="index" v-if="main" />
     <el-table-column label="제목">
       <template #default="scope">
-        <el-button type="primary" @click="noticeView(scope.row)" text>
+        <el-button type="primary" @click="noticeView(scope.row)" link>
           {{ scope.row.title }}
         </el-button>
       </template>
@@ -11,7 +11,7 @@
     <el-table-column label="작성일" prop="update" />
     <el-table-column label="조회수" prop="views" />
   </el-table>
-  <div class="page">
+  <div class="page" v-if="main">
     <el-pagination
       layout="prev, pager, next"
       :total="total"
@@ -35,6 +35,12 @@ export default {
       admin: false,
       currentPage: 1,
     };
+  },
+  props: {
+    main: {
+      type: Boolean,
+      default: true,
+    },
   },
   methods: {
     saveNotice(item) {

@@ -1,5 +1,6 @@
 import { reactive } from "vue";
 import VueCookies from "vue-cookies";
+import moment from "moment";
 
 export const projectPlanList = reactive({
   List: VueCookies.get("projectPlanList") || [],
@@ -45,7 +46,10 @@ export const projectPlanList = reactive({
   callList() {
     const rawData = this.List;
     console.log(rawData, "rawData");
-    const result = rawData.filter((list) => list.status === "진행");
+    const result = rawData.filter(
+      (list) =>
+        list.status === "진행" && list.date1[0] > moment().format("YYYY-MM-DD")
+    );
     console.log(result, "result");
     return result;
   },
@@ -143,10 +147,15 @@ export const projectPlanList = reactive({
   findProjectByName(name) {
     // name을 가지는 workList 내부 works를 찾고, 그 works를 가지는 workList 내부 {}에서 parentIdx를 찾아 해당 parentIdx와 같은 index를 가지는 List 내부 {}를 찾아서 반환
     const works = this.findWorkByName(name);
-    const workList = this.workList.find((list) => list.works === works);
-    const parentIdx = workList.parentIdx;
-    const project = this.List.find((list) => list.index === parentIdx);
-    return project;
+    const workLists = this.workList.filter((list) =>
+      works.some((work) => list.works.includes(work))
+    );
+    console.log(works, workLists, "works,workLists");
+    const projects = workLists.map((workList) => {
+      const parentIdx = workList.parentIdx;
+      return this.List.find((list) => list.index === parentIdx);
+    });
+    return projects;
   },
   findProjectByWork(work) {
     const workListEntry = this.workList.find((list) =>
