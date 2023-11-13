@@ -1,11 +1,13 @@
 <template lang="">
-  <el-button type="primary" @click="clicked = !clicked"
-    >반복일정 추가</el-button
-  >
-  <FullCalendar :options="calendarOption" />
-  <arrangeEvent :Date="selectedDate" @saveEvent="saveEvent" />
-  <showEvent :eventData="selectedEvent" />
-  <arrangeRepeat :clicked="clicked" @saveEvent="saveEvent" />
+  <div>
+    <el-button type="primary" @click="clicked = !clicked"
+      >반복일정 추가</el-button
+    >
+    <FullCalendar :options="calendarOption" />
+    <arrangeEvent :Date="selectedDate" @saveEvent="saveEvent" />
+    <showEvent :eventData="selectedEvent" />
+    <arrangeRepeat :clicked="clicked" @saveEvent="saveEvent" />
+  </div>
 </template>
 <script>
 import FullCalendar from "@fullcalendar/vue3";

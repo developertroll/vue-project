@@ -1,6 +1,8 @@
 import { reactive } from "vue";
 import VueCookies from "vue-cookies";
 import moment from "moment";
+import { NotificationList } from "./notificationList";
+import { MemberList } from "./memberList";
 
 export const projectPlanList = reactive({
   List: VueCookies.get("projectPlanList") || [],
@@ -30,6 +32,12 @@ export const projectPlanList = reactive({
       console.log(workPush);
       this.workList.push(workPush);
     }
+    NotificationList.saveList(
+      newList,
+      "프로젝트",
+      newList.Partipacants,
+      MemberList.currentMember
+    );
     this.setCookies();
   },
   callWorkList(project) {
@@ -48,7 +56,7 @@ export const projectPlanList = reactive({
     console.log(rawData, "rawData");
     const result = rawData.filter(
       (list) =>
-        list.status === "진행" && list.date1[0] > moment().format("YYYY-MM-DD")
+        list.status === "진행" && list.date1[0] < moment().format("YYYY-MM-DD")
     );
     console.log(result, "result");
     return result;

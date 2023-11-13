@@ -56,7 +56,7 @@ export default {
     MemberTable() {
       return this.MemberList.List.map((item) => {
         return {
-          key: item,
+          key: { name: item.name, job: item.job, rank: item.rank },
           label: item.name + "(" + item.job + ")",
         };
       });

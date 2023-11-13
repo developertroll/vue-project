@@ -1,18 +1,28 @@
 <template lang="">
-  <noticeBoard
-    @transition="transitionEvent"
-    v-if="currentView === 'noticeBoard'"
-  />
-  <noticeView :item="this.item" @return="returnEvent" v-else />
+  <div>
+    <noticeBoard
+      @transition="transitionEvent"
+      @writeEmit="writeEmitEvent"
+      v-if="currentView === 'noticeBoard'"
+    />
+    <noticeView
+      :item="this.item"
+      @return="returnEvent"
+      v-if="currentView === 'noticeView'"
+    />
+    <writeNotice v-if="currentView === 'writeNotice'" @saveEmit="returnEvent" />
+  </div>
 </template>
 <script>
 import noticeBoard from "./noticeBoard.vue";
 import noticeView from "./noticeView.vue";
+import writeNotice from "../admin/writeNotice.vue";
 export default {
   name: "noticeMain",
   components: {
     noticeBoard,
     noticeView,
+    writeNotice,
   },
   methods: {
     transitionEvent(item) {
@@ -22,6 +32,9 @@ export default {
     returnEvent() {
       this.item = {};
       this.currentView = "noticeBoard";
+    },
+    writeEmitEvent() {
+      this.currentView = "writeNotice";
     },
   },
   data() {

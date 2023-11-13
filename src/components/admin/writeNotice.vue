@@ -21,6 +21,7 @@ import moment from "moment";
 import { noticeBoard } from "@/composables/noticeBoard";
 export default {
   name: "writeNotice",
+  emits: ["saveEmit"],
   data() {
     return {
       form: {
@@ -35,6 +36,7 @@ export default {
     onSubmit() {
       this.form.content = this.preserveWhitespace(this.form.content);
       noticeBoard.saveList(this.form);
+      this.$emit("saveEmit");
     },
     preserveWhitespace(text) {
       return text.replace(/\n/g, "<br>").replace(/ /g, "&nbsp;");

@@ -6,6 +6,7 @@
           contents = item;
         }
       "
+      @mainPage="mainPage"
     >
       <MainContent :contents="contents" />
     </BasicLayout>
@@ -29,6 +30,15 @@ export default {
         path: "mainPage",
       },
     };
+  },
+  methods: {
+    mainPage() {
+      this.contents = {
+        label: "메인 페이지",
+        index: "mainPage",
+        path: "mainPage",
+      };
+    },
   },
 };
 </script>

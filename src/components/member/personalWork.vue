@@ -10,15 +10,28 @@
     <el-table-column prop="desc" label="업무내용" />
     <el-table-column prop="deadLine" label="마감일" />
     <el-table-column prop="status" label="상태" />
+    <el-table-column v-if="personal" label="작업">
+      <template #default="scope">
+        <createWorkProgress
+          :work="scope.row"
+          :project="projectData(scope.row)"
+          v-if="scope.row.status === '진행중'"
+        />
+        <div v-else>작업완료</div>
+      </template>
+    </el-table-column>
   </el-table>
 </template>
 <script>
 import { projectPlanList } from "@/composables/projectPlanList";
+import { MemberList } from "@/composables/memberList";
 import DocumentedProjectV2 from "../Approval/DocumentedProjectV2.vue";
+import createWorkProgress from "../project/createWorkProgress.vue";
 export default {
   name: "personalWork",
   components: {
     DocumentedProjectV2,
+    createWorkProgress,
   },
   props: {
     memberName: {
@@ -34,6 +47,9 @@ export default {
       const rawList = projectPlanList.findWorkByName(this.memberName.name);
       console.log(rawList);
       return rawList;
+    },
+    personal() {
+      return this.memberName.name === MemberList.currentMember;
     },
   },
   methods: {

@@ -112,4 +112,9 @@ export const MemberList = reactive({
     );
     return result;
   },
+  currentMember: VueCookies.get("currentMember") || "김영희",
+  setCurrentMember(name) {
+    this.currentMember = name;
+    VueCookies.set("currentMember", name);
+  },
 });

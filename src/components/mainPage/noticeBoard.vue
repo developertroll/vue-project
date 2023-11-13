@@ -19,20 +19,17 @@
       @current-change="showPage"
     />
   </div>
-  <writeNotice v-if="admin" @submit="saveNotice" />
+  <el-button type="primary" @click="writeEmit" v-if="admin">글쓰기</el-button>
 </template>
 <script>
-import writeNotice from "@/components/admin/writeNotice.vue";
 import { noticeBoard } from "@/composables/noticeBoard";
 export default {
   name: "noticeBoard",
-  emits: ["transition"],
-  components: {
-    writeNotice,
-  },
+  emits: ["transition", "writeEmit"],
+
   data() {
     return {
-      admin: false,
+      admin: true,
       currentPage: 1,
     };
   },
@@ -53,6 +50,9 @@ export default {
     },
     showPage(number = 1) {
       this.currentPage = number;
+    },
+    writeEmit() {
+      this.$emit("writeEmit");
     },
   },
   computed: {

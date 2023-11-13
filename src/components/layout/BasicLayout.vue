@@ -1,6 +1,6 @@
 <template lang="">
   <el-container class="main">
-    <el-header><BasicHeader /></el-header>
+    <el-header><BasicHeader @mainPage="mainPage" /></el-header>
     <el-container>
       <el-aside :width="menuWidth"
         ><SideMenu
@@ -22,6 +22,7 @@ import useBreakPoints from "@/composables/useBreakPoint";
 import { computed } from "vue";
 export default {
   name: "BasicLayout",
+  emits: ["menuSelect", "mainPage"],
   components: {
     BasicHeader,
     SideMenu,
@@ -35,11 +36,16 @@ export default {
       menuWidth,
     };
   },
+  methods: {
+    mainPage() {
+      this.$emit("mainPage");
+    },
+  },
 };
 </script>
 <style>
 .el-header {
-  background: #409eff;
+  background: #79bbff;
   color: #fff;
   display: flex;
   justify-content: space-between;

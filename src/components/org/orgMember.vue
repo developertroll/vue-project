@@ -1,5 +1,7 @@
 <template lang="">
-  <orgCalendar />
+  <div>
+    <orgCalendar />
+  </div>
 </template>
 <script>
 import orgCalendar from "./orgCalendar.vue";

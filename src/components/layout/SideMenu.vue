@@ -83,9 +83,13 @@ export default {
           icon: "setting",
           submenus: [
             { label: "구성원 관리", index: "addUser", path: "admin" },
-            { label: "공지 작성", index: "writeNotice", path: "admin" },
             { label: "공지 게시판", index: "noticeMain", path: "mainPage" },
             { label: "메인페이지 테스트", index: "mainPage", path: "mainPage" },
+            {
+              label: "개인 페이지 테스트",
+              index: "privatePage",
+              path: "member",
+            },
           ],
         },
       ],

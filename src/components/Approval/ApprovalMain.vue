@@ -1,5 +1,7 @@
 <template lang="">
-  <ApprovalTable />
+  <div>
+    <ApprovalTable />
+  </div>
 </template>
 <script>
 import ApprovalTable from "./ApprovalTable.vue";

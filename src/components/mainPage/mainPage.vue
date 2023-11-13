@@ -44,6 +44,7 @@
 <script>
 import noticeBoard from "./noticeBoard.vue";
 import mainTable from "./mainTable.vue";
+import { MemberList } from "@/composables/memberList";
 export default {
   name: "mainPage",
   emits: ["handleMain"],
@@ -53,7 +54,6 @@ export default {
   },
   data() {
     return {
-      currentMember: "김영희",
       emitterMenus: [
         { label: "프로젝트 계획", index: "projectPlan", path: "project" },
         {
@@ -69,6 +69,11 @@ export default {
   methods: {
     handleClick(number) {
       this.$emit("handleMain", this.emitterMenus[number]);
+    },
+  },
+  computed: {
+    currentMember() {
+      return MemberList.currentMember;
     },
   },
 };

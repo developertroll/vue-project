@@ -1,5 +1,5 @@
 <template lang="">
-  <el-descriptions :title="memberName.name" :column="2" border>
+  <el-descriptions :column="1" border>
     <el-descriptions-item
       v-for="(value, key) in memberInfo"
       :key="key"
@@ -22,14 +22,7 @@ export default {
   },
   computed: {
     memberInfo() {
-      const result = this.memberName;
-      return {
-        name: result.name,
-        rank: result.rank,
-        job: result.job,
-        phone: result.phone,
-        email: result.email,
-      };
+      return this.memberName;
     },
   },
   data() {
