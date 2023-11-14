@@ -44,7 +44,8 @@
     <el-alert type="warning" show-icon :closable="false" v-if="!PassWork">
       <div>
         업무 할당을 시작하기 위해선 모든 정보를 입력해야 하고, 해당 정보를 다시
-        입력하기 위해선 업무 할당을 초기화해야 합니다
+        입력하기 위해선 업무 할당을 초기화해야 합니다. 이 프로젝트의 결재는
+        지정한 인원에서 가장 높은 직급의 사람이 결재를 하게 됩니다.
       </div>
     </el-alert>
     <div class="center">

@@ -106,7 +106,7 @@ export default {
       try {
         let newList;
         if (this.project && this.project.type) {
-          if (this.project.status) {
+          if (this.project.status === "수정") {
             newList = this.project;
           } else {
             newList = ApprovalList.findList(this.project);
@@ -120,6 +120,7 @@ export default {
           delete newList.index;
           console.log(newList);
         }
+        delete newList.master;
         return newList;
       } catch (error) {
         console.log(error);

@@ -1,12 +1,30 @@
 import { reactive } from "vue";
 import { projectPlanList } from "./projectPlanList";
 import VueCookies from "vue-cookies";
+import { NotificationList } from "./notificationList";
+import { MemberList } from "./memberList";
 export const ApprovalList = reactive({
   requestList: VueCookies.get("requestList") || [],
   completeList: VueCookies.get("completeList") || [],
   request(newList, types, status) {
-    const addType = { ...newList, type: types, status: status };
+    const ApprovalMember = MemberList.findHighestRankMember(
+      newList.Partipacants
+    );
+    const addType = {
+      ...newList,
+      type: types,
+      status: status,
+      master: ApprovalMember,
+    };
+
+    NotificationList.saveList(
+      addType,
+      "결재",
+      ApprovalMember,
+      MemberList.currentMember
+    );
     this.requestList.push(addType);
+    this.setCookies();
   },
   completion(newList) {
     let raw = "";
@@ -42,6 +60,7 @@ export const ApprovalList = reactive({
         // raw = "";
         break;
     }
+    this.setCookies();
   },
   type: ["계획", "업무", "휴가", "기타"],
   status: ["대기", "승인", "반려", "취소"],

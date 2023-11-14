@@ -33,6 +33,7 @@ import { ApprovalList } from "@/composables/approvalList";
 import { projectPlanList } from "@/composables/projectPlanList";
 import DocumentedProjectV2 from "./DocumentedProjectV2.vue";
 import { ElMessageBox } from "element-plus";
+import { MemberList } from "@/composables/memberList";
 export default {
   name: "ApprovalTable",
   components: {
@@ -88,28 +89,29 @@ export default {
   },
   computed: {
     appData() {
-      let newList = [];
-      this.ApprovalList.requestList.forEach((item) => {
-        // console.log(item);
-        if (item.type === "업무") {
-          newList.push({
-            type: item.type,
-            update: item.update,
-            title: item.name + " " + item.position + "업무 보고",
-            status: item.status,
-            name: item.name,
-            parent: item.parent,
-          });
-        } else {
-          newList.push({
-            type: item.type,
-            update: item.update,
-            title: item.title,
-            status: item.status,
-          });
-        }
-      });
-      return newList;
+      return this.ApprovalList.requestList
+        .filter(
+          (item) => item.master && item.master.name === MemberList.currentMember
+        )
+        .map((item) => {
+          if (item.type === "업무") {
+            return {
+              type: item.type,
+              update: item.update,
+              title: `${item.name} ${item.position}업무 보고`,
+              status: item.status,
+              name: item.name,
+              parent: item.parent,
+            };
+          } else {
+            return {
+              type: item.type,
+              update: item.update,
+              title: item.title,
+              status: item.status,
+            };
+          }
+        });
     },
   },
 };

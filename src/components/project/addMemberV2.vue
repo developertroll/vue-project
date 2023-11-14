@@ -31,6 +31,14 @@ export default {
   emits: ["savePart"],
   methods: {
     Confirm() {
+      this.member = this.member.map((item) => {
+        const original = this.MemberList.List[item];
+        return {
+          name: original.name,
+          job: original.job,
+          rank: original.rank,
+        };
+      });
       this.$emit("savePart", this.member);
       this.shown = false;
     },
@@ -54,10 +62,10 @@ export default {
   },
   computed: {
     MemberTable() {
-      return this.MemberList.List.map((item) => {
+      return this.MemberList.List.map((item, index) => {
         return {
-          key: { name: item.name, job: item.job, rank: item.rank },
-          label: item.name + "(" + item.job + ")",
+          key: index,
+          label: `${item.name}(${item.job})`,
         };
       });
     },

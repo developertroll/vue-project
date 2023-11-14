@@ -1,6 +1,8 @@
 <template lang="">
   <el-container class="main">
-    <el-header><BasicHeader @mainPage="mainPage" /></el-header>
+    <el-header
+      ><BasicHeader @mainPage="mainPage" @handleCommand="handleCommand"
+    /></el-header>
     <el-container>
       <el-aside :width="menuWidth"
         ><SideMenu
@@ -39,6 +41,9 @@ export default {
   methods: {
     mainPage() {
       this.$emit("mainPage");
+    },
+    handleCommand(command) {
+      this.$emit("handleCommand", command);
     },
   },
 };

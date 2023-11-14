@@ -2,6 +2,8 @@ import { reactive } from "vue";
 import VueCookies from "vue-cookies";
 import { projectPlanList } from "./projectPlanList";
 import lzString from "lz-string";
+import { MemberList } from "./memberList";
+import { NotificationList } from "./notificationList";
 
 export const eventList = reactive({
   eventList: VueCookies.get("eventList")
@@ -57,6 +59,12 @@ export const eventList = reactive({
     if (list.id === undefined) {
       list.id = this.eventList.length + 1;
     }
+    NotificationList.saveList(
+      list,
+      "일정",
+      list.member,
+      MemberList.currentMember
+    );
     this.eventList.push(list);
     console.log(this.eventList);
     const compressedEventList = lzString.compressToEncodedURIComponent(

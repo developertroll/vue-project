@@ -117,4 +117,17 @@ export const MemberList = reactive({
     this.currentMember = name;
     VueCookies.set("currentMember", name);
   },
+  //받아온 member들의 rank를 비교해 가장 높은 rank를 가진 member 반환
+  findHighestRankMember(members) {
+    let result = members[0];
+    members.forEach((member) => {
+      if (
+        this.availableRank.indexOf(member.rank) >
+        this.availableRank.indexOf(result.rank)
+      ) {
+        result = member;
+      }
+    });
+    return result;
+  },
 });

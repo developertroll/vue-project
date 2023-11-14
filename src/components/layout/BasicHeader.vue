@@ -8,20 +8,36 @@
     <div>
       <span>{{ currentMember }}님, 반갑습니다!</span>
       <el-button type="primary">로그아웃</el-button>
-      <el-dropdown trigger="click">
-        <el-badge value="12">
+      <notificationAlarm
+        :Notification="Notification"
+        @handleCommand="handleCommand"
+      />
+      <!-- <el-dropdown trigger="click" @command="handleCommand">
+        <el-badge :value="Notification.length" :hidden="checkZero">
           <el-button type="primary" :icon="Bell" />
         </el-badge>
         <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item>Action 1</el-dropdown-item>
-            <el-dropdown-item>Action 2</el-dropdown-item>
-            <el-dropdown-item>Action 3</el-dropdown-item>
-            <el-dropdown-item disabled>Action 4</el-dropdown-item>
-            <el-dropdown-item divided>Action 5</el-dropdown-item>
+          <el-dropdown-menu v-if="Notification.length > 0">
+            <el-dropdown-item
+              v-for="item in Notification"
+              :key="item.idx"
+              :value="item.title"
+              :label="item.title"
+              :command="{ type: item.type, title: item.title, idx: item.idx }"
+              divided
+            >
+              {{ item.type }} 알람: {{ item.from }}님이 {{ item.type }}에
+              {{ item.to }}님을 인용하여 새로운 {{ item.type }}
+              {{ item.title }} 을 작성하였습니다.
+            </el-dropdown-item>
+          </el-dropdown-menu>
+          <el-dropdown-menu v-else>
+            <el-dropdown-item disabled>
+              <span>새로운 알람이 없습니다.</span>
+            </el-dropdown-item>
           </el-dropdown-menu>
         </template>
-      </el-dropdown>
+      </el-dropdown> -->
       <!-- 아래 내용은 현재 로그인한 사람을 바꾸는 기능, 로그인 기능이 존재하면 지워질 개발자 옵션임 -->
       <el-select v-model="currentMember" placeholder="회원 선택">
         <el-option
@@ -35,6 +51,8 @@
 <script>
 import { Bell } from "@element-plus/icons";
 import { MemberList } from "@/composables/memberList";
+import { NotificationList } from "@/composables/notificationList";
+import notificationAlarm from "./notificationAlarm.vue";
 export default {
   name: "BasicHeader",
   data() {
@@ -42,6 +60,9 @@ export default {
       currentMember: MemberList.currentMember,
       Bell,
     };
+  },
+  components: {
+    notificationAlarm,
   },
   computed: {
     currentMemberList() {
@@ -52,10 +73,21 @@ export default {
         };
       });
     },
+    Notification() {
+      return NotificationList.callListByName(this.currentMember);
+    },
+    checkZero() {
+      return this.Notification.length === 0;
+    },
   },
   methods: {
     mainPage() {
       this.$emit("mainPage");
+    },
+    handleCommand(command) {
+      NotificationList.deleteListByIdx(command.idx);
+      console.log(command);
+      this.$emit("handleCommand", command);
     },
   },
   watch: {
