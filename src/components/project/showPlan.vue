@@ -29,7 +29,7 @@
       </template>
     </el-table-column>
     <el-table-column prop="desc" label="설명" />
-    <el-table-column prop="member" label="참가인원" />
+    <el-table-column prop="member" label="참가인원" show-overflow-tooltip />
     <el-table-column prop="status" label="상태" />
     <el-table-column prop="startDate" label="시작일" />
   </el-table>

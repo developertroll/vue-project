@@ -46,7 +46,6 @@ export default {
           icon: "location",
           submenus: [
             { label: "조직도", index: "orgChart", path: "org" },
-            { label: "구성원", index: "orgMember", path: "org" },
             { label: "일정표", index: "orgCalendar", path: "org" },
           ],
         },
@@ -74,6 +73,15 @@ export default {
           icon: "location",
           submenus: [
             { label: "결재", index: "ApprovalMain", path: "Approval" },
+            { label: "구성원", index: "orgChart", path: "org" },
+          ],
+        },
+        {
+          label: "개인 페이지",
+          index: "member",
+          icon: "location",
+          submenus: [
+            { label: "개인 페이지", index: "privatePage", path: "member" },
             { label: "구성원", index: "orgChart", path: "org" },
           ],
         },

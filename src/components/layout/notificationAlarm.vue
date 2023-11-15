@@ -13,8 +13,7 @@
           :command="{ type: item.type, title: item.title, idx: item.idx }"
           divided
         >
-          <h2>{{ item.type }} 알람</h2>
-          <el-divider />
+          <!-- el-icon 도입해서 각 type마다 아이콘으로 넣기! -->
           <span class="explain">
             {{ item.from }}님이 {{ item.title }}을 작성하였습니다.
           </span>

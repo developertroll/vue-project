@@ -3,9 +3,23 @@ import { projectPlanList } from "./projectPlanList";
 import VueCookies from "vue-cookies";
 import { NotificationList } from "./notificationList";
 import { MemberList } from "./memberList";
+import lzString from "lz-string";
+
 export const ApprovalList = reactive({
-  requestList: VueCookies.get("requestList") || [],
-  completeList: VueCookies.get("completeList") || [],
+  requestList: VueCookies.get("requestList")
+    ? JSON.parse(
+        lzString.decompressFromEncodedURIComponent(
+          VueCookies.get("requestList")
+        )
+      )
+    : [],
+  completeList: VueCookies.get("completeList")
+    ? JSON.parse(
+        lzString.decompressFromEncodedURIComponent(
+          VueCookies.get("completeList")
+        )
+      )
+    : [],
   request(newList, types, status) {
     const ApprovalMember = MemberList.findHighestRankMember(
       newList.Partipacants
@@ -16,7 +30,6 @@ export const ApprovalList = reactive({
       status: status,
       master: ApprovalMember,
     };
-
     NotificationList.saveList(
       addType,
       "결재",
@@ -114,11 +127,21 @@ export const ApprovalList = reactive({
     }
   },
   setCookies() {
-    VueCookies.set("requestList", this.requestList);
-    VueCookies.set("completeList", this.completeList);
+    const compressedRequestList = lzString.compressToEncodedURIComponent(
+      JSON.stringify(this.requestList)
+    );
+    const compressedCompleteList = lzString.compressToEncodedURIComponent(
+      JSON.stringify(this.completeList)
+    );
+    VueCookies.set("requestList", compressedRequestList);
+    VueCookies.set("completeList", compressedCompleteList);
   },
   getCookies() {
     this.requestList = VueCookies.get("requestList");
     this.completeList = VueCookies.get("completeList");
+  },
+  findRequestListByMember(name) {
+    const raw = this.requestList.filter((list) => list.master === name);
+    return raw;
   },
 });

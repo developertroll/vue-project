@@ -4,6 +4,7 @@
     <el-button type="danger" @click="approvalSubmit('반려')">반려</el-button>
     <el-button type="info" @click="approvalSubmit('취소')">취소</el-button>
     <el-button type="warning" @click="approvalSubmit('삭제')">삭제</el-button>
+    <el-button type="primary" @click="debug">값체크</el-button>
   </div>
   <el-table
     :data="appData"
@@ -46,9 +47,13 @@ export default {
       projectPlanList,
       selectedRow: [],
       type: "",
+      currentMember: MemberList.currentMember,
     };
   },
   methods: {
+    debug() {
+      console.log(this.appData);
+    },
     handleSelect(selection) {
       this.selectedRow = selection;
     },
@@ -87,15 +92,22 @@ export default {
         });
     },
   },
+  watch: {
+    currentMember() {
+      this.currentMember = MemberList.currentMember;
+    },
+  },
   computed: {
     appData() {
+      if (!Array.isArray(this.ApprovalList.requestList)) return [];
       return this.ApprovalList.requestList
         .filter(
-          (item) => item.master && item.master.name === MemberList.currentMember
+          (item) => item.master && item.master.name === this.currentMember
         )
         .map((item) => {
+          console.log(item);
           if (item.type === "업무") {
-            return {
+            const result = {
               type: item.type,
               update: item.update,
               title: `${item.name} ${item.position}업무 보고`,
@@ -103,13 +115,18 @@ export default {
               name: item.name,
               parent: item.parent,
             };
+            console.log(result, "if");
+            return result;
           } else {
-            return {
+            console.log(item, "else");
+            const result = {
               type: item.type,
               update: item.update,
               title: item.title,
               status: item.status,
             };
+            console.log(result, "else");
+            return result;
           }
         });
     },
