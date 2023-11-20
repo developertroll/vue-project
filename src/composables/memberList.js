@@ -130,4 +130,9 @@ export const MemberList = reactive({
     });
     return result;
   },
+  findIndexByRankName(rank, name) {
+    return this.List.findIndex(
+      (list) => list.rank === rank && list.name === name
+    );
+  },
 });

@@ -27,19 +27,22 @@ export const messageList = reactive({
       )
     : [],
   saveList(newList, to, from) {
-    this.List.push({
-      title: newList.title,
-      content: newList.content,
-      to: to,
-      from: from,
-      idx: this.List.length,
-      time: moment().format("YYYY-MM-DD"),
+    //to는 object가 들어오는 array라서 각각의 element를 처리해야함
+    to.forEach((element) => {
+      this.List.unshift({
+        title: newList.title,
+        content: newList.content,
+        to: element,
+        from: from,
+        idx: this.List.length,
+        time: moment().format("YYYY-MM-DD"),
+      });
+      NotificationList.saveList(newList, "메시지", element, from);
     });
     VueCookies.set(
       "messageList",
       lzString.compressToEncodedURIComponent(JSON.stringify(this.List))
     );
-    NotificationList.saveList(newList, "메시지", to, from);
   },
   deleteListByIdx(idx) {
     this.deletedList.push(this.List[idx]);
@@ -54,7 +57,7 @@ export const messageList = reactive({
     );
   },
   callListByName(name) {
-    return this.List.filter((element) => element.to === name);
+    return this.List.filter((element) => element.to.name === name);
   },
   callListByFrom(name) {
     return this.List.filter((element) => element.from === name);

@@ -82,7 +82,7 @@ export default {
           icon: "location",
           submenus: [
             { label: "개인 페이지", index: "privatePage", path: "member" },
-            { label: "구성원", index: "orgChart", path: "org" },
+            { label: "메세지", index: "messageMain", path: "member" },
           ],
         },
         {

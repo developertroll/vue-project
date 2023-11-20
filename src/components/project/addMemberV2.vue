@@ -20,6 +20,7 @@
     </div>
     <div class="buttons">
       <el-button type="primary" @click="Confirm">확인</el-button>
+      <el-button type="primary" @click="debug">디버그</el-button>
       <el-button type="warning" @click="notSave">취소</el-button>
     </div>
   </el-dialog>
@@ -45,6 +46,11 @@ export default {
     notSave() {
       this.member = this.parentData;
       this.shown = false;
+    },
+    debug() {
+      console.log(this.member);
+      console.log(this.parentData);
+      console.log(this.MemberTable);
     },
   },
   data() {
@@ -73,7 +79,20 @@ export default {
   watch: {
     parentData: {
       handler: function (val) {
-        this.member = val;
+        // const newMember = val.map((item) => {
+        //   return {
+        //     key: MemberList.findIndexByRankName(item.rank, item.name),
+        //     label: `${item.name}(${item.job})`,
+        //   };
+        // });
+        // console.log(newMember);
+        // this.member = newMember;
+        const newMember = val.map((item) =>
+          MemberList.findIndexByRankName(item.rank, item.name)
+        );
+        if (JSON.stringify(newMember) !== JSON.stringify(this.member)) {
+          this.member = newMember;
+        }
       },
       deep: true,
     },
