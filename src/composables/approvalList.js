@@ -29,6 +29,7 @@ export const ApprovalList = reactive({
       type: types,
       status: status,
       master: ApprovalMember,
+      writer: MemberList.currentMember,
     };
     NotificationList.saveList(
       addType,
@@ -92,6 +93,7 @@ export const ApprovalList = reactive({
       (list) => list.title === item.title || list.name === item.name
     );
     raw.status = status;
+    NotificationList.saveList(raw, "결재", raw.writer, raw.master);
   },
   modifyCompletion(item) {
     try {
@@ -143,5 +145,16 @@ export const ApprovalList = reactive({
   findRequestListByMember(name) {
     const raw = this.requestList.filter((list) => list.master === name);
     return raw;
+  },
+  findRequestListByWriter(name) {
+    const raw = this.requestList.filter((list) => list.writer === name);
+    return raw;
+  },
+  deleteRequestList(item) {
+    const raw = this.requestList.find(
+      (list) => list.title === item.title || list.name === item.name
+    );
+    const index = this.requestList.indexOf(raw);
+    this.requestList.splice(index, 1);
   },
 });

@@ -3,7 +3,6 @@
     <el-button type="primary" @click="approvalSubmit('승인')">승인</el-button>
     <el-button type="danger" @click="approvalSubmit('반려')">반려</el-button>
     <el-button type="info" @click="approvalSubmit('취소')">취소</el-button>
-    <el-button type="warning" @click="approvalSubmit('삭제')">삭제</el-button>
     <el-button type="primary" @click="debug">값체크</el-button>
   </div>
   <el-table
@@ -77,6 +76,8 @@ export default {
             } else if (type === "승인") {
               this.ApprovalList.changeStatus(original, type);
               this.ApprovalList.completion(original);
+            } else {
+              this.ApprovalList.changeStatus(original, type);
             }
           }
           this.$message({

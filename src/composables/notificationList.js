@@ -9,6 +9,7 @@ export const NotificationList = reactive({
     title: "",
     type: "",
   },
+  typeTemplate: ["프로젝트", "결재", "업무", "메세지"],
   saveList(newList, type, to, from) {
     if (Array.isArray(to)) {
       to.forEach((element) => {

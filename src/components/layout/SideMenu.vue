@@ -24,13 +24,22 @@
   </el-row>
 </template>
 <script>
-import { Location, Setting } from "@element-plus/icons";
+import {
+  Location,
+  Setting,
+  Document,
+  Briefcase,
+  OfficeBuilding,
+} from "@element-plus/icons";
 import { reactive, toRefs } from "vue";
 export default {
   name: "SideMenu",
   components: {
     Location,
     Setting,
+    Document,
+    Briefcase,
+    OfficeBuilding,
   },
   props: {
     isCollapse: {
@@ -43,7 +52,7 @@ export default {
         {
           label: "조직관리",
           index: "org",
-          icon: "location",
+          icon: "OfficeBuilding",
           submenus: [
             { label: "조직도", index: "orgChart", path: "org" },
             { label: "일정표", index: "orgCalendar", path: "org" },
@@ -52,9 +61,10 @@ export default {
         {
           label: "프로젝트 관리",
           index: "project",
-          icon: "setting",
+          icon: "Document",
           submenus: [
             { label: "프로젝트 계획", index: "projectPlan", path: "project" },
+            { label: "테스트", index: "protoPlanV2", path: "project" },
             {
               label: "진행중인 프로젝트",
               index: "projectOngoing",
@@ -70,7 +80,7 @@ export default {
         {
           label: "결재",
           index: "Approval",
-          icon: "location",
+          icon: "Briefcase",
           submenus: [
             { label: "결재", index: "ApprovalMain", path: "Approval" },
             { label: "구성원", index: "orgChart", path: "org" },
