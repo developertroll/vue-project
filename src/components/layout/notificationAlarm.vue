@@ -14,8 +14,11 @@
           divided
         >
           <!-- el-icon 도입해서 각 type마다 아이콘으로 넣기! -->
+          <div v-if="item.type">
+            <el-icon><component :is="item.type" /></el-icon>
+          </div>
           <span class="explain">
-            {{ item.from }}님이 {{ item.title }}을 작성하였습니다.
+            {{ item.content }}
           </span>
         </el-dropdown-item>
       </el-dropdown-menu>
@@ -28,9 +31,24 @@
   </el-dropdown>
 </template>
 <script>
-import { Bell } from "@element-plus/icons";
+import {
+  Bell,
+  OfficeBuilding,
+  Message,
+  Document,
+  Briefcase,
+  Calendar,
+} from "@element-plus/icons";
+import { NotificationList } from "@/composables/notificationList";
 export default {
   name: "NotificationAlarm",
+  components: {
+    Document,
+    Briefcase,
+    OfficeBuilding,
+    Message,
+    Calendar,
+  },
   props: {
     Notification: {
       type: Array,
@@ -41,11 +59,19 @@ export default {
     handleCommand(command) {
       this.$emit("handleCommand", command);
     },
+    handleTypeIcon(type) {
+      return NotificationList.callIconByType(type);
+    },
   },
   computed: {
     checkZero() {
       return this.Notification.length === 0;
     },
+  },
+  data() {
+    return {
+      Icon: "",
+    };
   },
   setup() {
     return {

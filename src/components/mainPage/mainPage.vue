@@ -1,5 +1,5 @@
 <template lang="">
-  <div>{{ currentMember }}님, 반갑습니다!</div>
+  <div class="title">{{ currentMember }} 님, 반갑습니다!</div>
   <!-- 프로젝트 일정, 업무 -->
   <el-space wrap fill :fillRatio="90" size="large">
     <el-card>
@@ -87,5 +87,11 @@ export default {
 .card-header span {
   font-size: 1.5rem;
   font-weight: bold;
+}
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-align: center;
 }
 </style>

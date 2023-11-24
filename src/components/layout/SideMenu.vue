@@ -3,7 +3,7 @@
     <el-col>
       <el-menu :collapse="isCollapse">
         <el-sub-menu
-          v-for="menu in menuItem"
+          v-for="menu in adminCheckedMenu"
           :key="menu.index"
           :index="menu.index"
         >
@@ -32,6 +32,7 @@ import {
   OfficeBuilding,
 } from "@element-plus/icons";
 import { reactive, toRefs } from "vue";
+import { MemberList } from "@/composables/memberList";
 export default {
   name: "SideMenu",
   components: {
@@ -44,6 +45,16 @@ export default {
   props: {
     isCollapse: {
       type: Boolean,
+    },
+  },
+  emits: ["menuSelect"],
+  computed: {
+    adminCheckedMenu() {
+      if (MemberList.currentMember === MemberList.currentAdmin) {
+        return this.menuItem;
+      } else {
+        return this.menuItem.filter((item) => item.label !== "관리자");
+      }
     },
   },
   setup(props, context) {
@@ -64,7 +75,7 @@ export default {
           icon: "Document",
           submenus: [
             { label: "프로젝트 계획", index: "projectPlan", path: "project" },
-            { label: "테스트", index: "protoPlanV2", path: "project" },
+            { label: "대기중인 계획", index: "protoPlanV2", path: "project" },
             {
               label: "진행중인 프로젝트",
               index: "projectOngoing",
@@ -83,7 +94,6 @@ export default {
           icon: "Briefcase",
           submenus: [
             { label: "결재", index: "ApprovalMain", path: "Approval" },
-            { label: "구성원", index: "orgChart", path: "org" },
           ],
         },
         {
@@ -100,14 +110,14 @@ export default {
           index: "admin",
           icon: "setting",
           submenus: [
-            { label: "구성원 관리", index: "addUser", path: "admin" },
+            { label: "구성원 추가", index: "addUser", path: "admin" },
             { label: "공지 게시판", index: "noticeMain", path: "mainPage" },
-            { label: "메인페이지 테스트", index: "mainPage", path: "mainPage" },
-            {
-              label: "개인 페이지 테스트",
-              index: "privatePage",
-              path: "member",
-            },
+            // { label: "메인페이지 테스트", index: "mainPage", path: "mainPage" },
+            // {
+            //   label: "개인 페이지 테스트",
+            //   index: "privatePage",
+            //   path: "member",
+            // },
           ],
         },
       ],

@@ -37,7 +37,7 @@ export const messageList = reactive({
         idx: this.List.length,
         time: moment().format("YYYY-MM-DD"),
       });
-      NotificationList.saveList(newList, "메시지", element, from);
+      NotificationList.saveList(newList, "메세지", element, from);
     });
     VueCookies.set(
       "messageList",

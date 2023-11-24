@@ -28,6 +28,18 @@ export const MemberList = reactive({
       joinDate: "2021-01-01",
       leaveDate: "",
     },
+    {
+      name: "이영희",
+      job: "디자이너",
+      rank: "사원",
+      status: "재직",
+      phone: "010-1234-5678",
+      email: "dummy3@dummy.asdf",
+      address: "서울시 강남구",
+      birthday: "1996-02-01",
+      joinDate: "2021-01-01",
+      leaveDate: "",
+    },
   ],
   memberTemplate: {
     name: "",
@@ -64,7 +76,7 @@ export const MemberList = reactive({
     "전무",
     "사장",
   ],
-  RankList: VueCookies.get("rankList") || [],
+  RankList: VueCookies.get("rankList") || this.setRankList(),
   changeList(newList) {
     this.List = newList;
   },
@@ -113,6 +125,7 @@ export const MemberList = reactive({
     return result;
   },
   currentMember: VueCookies.get("currentMember") || "김영희",
+  currentAdmin: VueCookies.get("currentAdmin") || "김철수",
   setCurrentMember(name) {
     this.currentMember = name;
     VueCookies.set("currentMember", name);

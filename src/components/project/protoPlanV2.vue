@@ -47,7 +47,9 @@ export default {
   },
   methods: {
     debug() {
+      console.log(ApprovalList.requestList);
       console.log(this.appData);
+      console.log(ApprovalList.callRequestListByMaster("결재자"), "문제코드");
     },
     deletePlan(item) {
       ElMessageBox.confirm("정말로 삭제하시겠습니까?", "경고", {

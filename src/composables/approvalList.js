@@ -20,10 +20,11 @@ export const ApprovalList = reactive({
         )
       )
     : [],
-  request(newList, types, status) {
-    const ApprovalMember = MemberList.findHighestRankMember(
+  async request(newList, types, status) {
+    const ApprovalMember = await MemberList.findHighestRankMember(
       newList.Partipacants
     );
+    console.log(ApprovalMember, "ApprovalMember");
     const addType = {
       ...newList,
       type: types,
@@ -128,20 +129,23 @@ export const ApprovalList = reactive({
       console.error("An error occurred:", error);
     }
   },
+  toJSON(obj) {
+    return JSON.parse(JSON.stringify(obj));
+  },
   setCookies() {
     const compressedRequestList = lzString.compressToEncodedURIComponent(
-      JSON.stringify(this.requestList)
+      JSON.stringify(this.toJSON(this.requestList))
     );
     const compressedCompleteList = lzString.compressToEncodedURIComponent(
-      JSON.stringify(this.completeList)
+      JSON.stringify(this.toJSON(this.completeList))
     );
     VueCookies.set("requestList", compressedRequestList);
     VueCookies.set("completeList", compressedCompleteList);
   },
-  getCookies() {
-    this.requestList = VueCookies.get("requestList");
-    this.completeList = VueCookies.get("completeList");
-  },
+  // getCookies() {
+  //   this.requestList = VueCookies.get("requestList");
+  //   this.completeList = VueCookies.get("completeList");
+  // },
   findRequestListByMember(name) {
     const raw = this.requestList.filter((list) => list.master === name);
     return raw;
@@ -156,5 +160,12 @@ export const ApprovalList = reactive({
     );
     const index = this.requestList.indexOf(raw);
     this.requestList.splice(index, 1);
+  },
+  callRequestListByMaster(name) {
+    console.log(this.requestList, name); // Add this line
+    const raw = this.requestList.filter(
+      (list) => list.master && list.master.name === name
+    );
+    return raw;
   },
 });

@@ -30,7 +30,6 @@
 </template>
 <script>
 import { ApprovalList } from "@/composables/approvalList";
-import { projectPlanList } from "@/composables/projectPlanList";
 import DocumentedProjectV2 from "./DocumentedProjectV2.vue";
 import { ElMessageBox } from "element-plus";
 import { MemberList } from "@/composables/memberList";
@@ -42,15 +41,15 @@ export default {
   data() {
     return {
       tableData: [],
-      ApprovalList,
-      projectPlanList,
       selectedRow: [],
       type: "",
       currentMember: MemberList.currentMember,
+      appData: [],
     };
   },
   methods: {
     debug() {
+      console.log(this.currentMember);
       console.log(this.appData);
     },
     handleSelect(selection) {
@@ -92,23 +91,13 @@ export default {
           });
         });
     },
-  },
-  watch: {
-    currentMember() {
-      this.currentMember = MemberList.currentMember;
-    },
-  },
-  computed: {
-    appData() {
-      if (!Array.isArray(this.ApprovalList.requestList)) return [];
-      return this.ApprovalList.requestList
-        .filter(
-          (item) => item.master && item.master.name === this.currentMember
-        )
-        .map((item) => {
-          console.log(item);
+    requestData() {
+      console.log(ApprovalList.requestList);
+      if (!Array.isArray(ApprovalList.requestList)) return [];
+      return ApprovalList.callRequestListByMaster(this.currentMember).map(
+        (item) => {
           if (item.type === "업무") {
-            const result = {
+            return {
               type: item.type,
               update: item.update,
               title: `${item.name} ${item.position}업무 보고`,
@@ -116,20 +105,32 @@ export default {
               name: item.name,
               parent: item.parent,
             };
-            console.log(result, "if");
-            return result;
           } else {
-            console.log(item, "else");
-            const result = {
+            return {
               type: item.type,
               update: item.update,
               title: item.title,
               status: item.status,
             };
-            console.log(result, "else");
-            return result;
           }
-        });
+        }
+      );
+    },
+  },
+  // onMounted일때와 ApprovalList.requestList가 바뀔때마다 requestData를 호출한다.
+
+  mounted() {
+    this.appData = this.requestData();
+  },
+  watch: {
+    currentMember() {
+      this.currentMember = MemberList.currentMember;
+    },
+    "ApprovalList.requestList": {
+      handler() {
+        this.appData = this.requestData();
+      },
+      deep: true,
     },
   },
 };

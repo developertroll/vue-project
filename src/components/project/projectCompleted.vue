@@ -8,6 +8,9 @@
       <template v-for="item in finishedList" :key="item.title">
         <projectCompletedCard :project="item" />
       </template>
+      <template v-if="finishedList.length === 0">
+        <el-empty description="완성된 프로젝트가 없습니다." />
+      </template>
     </div>
     <div v-else>
       <showPlan :projectPlan="'완료'" />

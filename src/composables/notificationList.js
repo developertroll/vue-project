@@ -9,7 +9,35 @@ export const NotificationList = reactive({
     title: "",
     type: "",
   },
-  typeTemplate: ["프로젝트", "결재", "업무", "메세지"],
+  typeTemplate: ["프로젝트", "결재", "업무", "메세지", "일정"],
+  iconType: ["OfficeBuilding", "Briefcase", "Document", "Message", "Calendar"],
+  contentTemplate: [
+    (content) => `프로젝트 ${content}에 배정되었습니다`,
+    (content) => `결재 ${content}이(가) 도착했습니다`,
+    (content) => `업무 ${content}이(가) 배정되었습니다`,
+    (content) => `${content}님으로부터 메세지가 도착했습니다`,
+    (content) => `일정 ${content}이(가) 추가되었습니다`,
+  ],
+  callContentByType(item) {
+    const type = item.type;
+    const content = item.type === "메세지" ? item.from : item.title;
+    if (!type) {
+      return [];
+    }
+    const index = this.typeTemplate.indexOf(type);
+    if (index === -1) {
+      return "";
+    }
+    return this.contentTemplate[index](content);
+  },
+  callIconByType(type) {
+    if (!type) {
+      return "";
+    }
+    return this.iconType[
+      this.typeTemplate.findIndex((element) => element === type)
+    ];
+  },
   saveList(newList, type, to, from) {
     if (Array.isArray(to)) {
       to.forEach((element) => {

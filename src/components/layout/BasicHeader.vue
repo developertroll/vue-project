@@ -12,32 +12,6 @@
         :Notification="Notification"
         @handleCommand="handleCommand"
       />
-      <!-- <el-dropdown trigger="click" @command="handleCommand">
-        <el-badge :value="Notification.length" :hidden="checkZero">
-          <el-button type="primary" :icon="Bell" />
-        </el-badge>
-        <template #dropdown>
-          <el-dropdown-menu v-if="Notification.length > 0">
-            <el-dropdown-item
-              v-for="item in Notification"
-              :key="item.idx"
-              :value="item.title"
-              :label="item.title"
-              :command="{ type: item.type, title: item.title, idx: item.idx }"
-              divided
-            >
-              {{ item.type }} 알람: {{ item.from }}님이 {{ item.type }}에
-              {{ item.to }}님을 인용하여 새로운 {{ item.type }}
-              {{ item.title }} 을 작성하였습니다.
-            </el-dropdown-item>
-          </el-dropdown-menu>
-          <el-dropdown-menu v-else>
-            <el-dropdown-item disabled>
-              <span>새로운 알람이 없습니다.</span>
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown> -->
       <!-- 아래 내용은 현재 로그인한 사람을 바꾸는 기능, 로그인 기능이 존재하면 지워질 개발자 옵션임 -->
       <el-select v-model="currentMember" placeholder="회원 선택">
         <el-option
@@ -49,7 +23,6 @@
   </div>
 </template>
 <script>
-import { Bell } from "@element-plus/icons";
 import { MemberList } from "@/composables/memberList";
 import { NotificationList } from "@/composables/notificationList";
 import notificationAlarm from "./notificationAlarm.vue";
@@ -58,7 +31,8 @@ export default {
   data() {
     return {
       currentMember: MemberList.currentMember,
-      Bell,
+
+      Notification: [],
     };
   },
   components: {
@@ -73,12 +47,6 @@ export default {
         };
       });
     },
-    Notification() {
-      return NotificationList.callListByName(this.currentMember);
-    },
-    checkZero() {
-      return this.Notification.length === 0;
-    },
   },
   methods: {
     mainPage() {
@@ -89,11 +57,30 @@ export default {
       console.log(command);
       this.$emit("handleCommand", command);
     },
+    updateNotification() {
+      const List = NotificationList.callListByName(this.currentMember);
+      console.log(List);
+      const result = [];
+      List.forEach((item) => {
+        const content = NotificationList.callContentByType(item);
+        const type = NotificationList.callIconByType(item.type);
+        result.push({
+          ...item,
+          type: type,
+          content,
+        });
+      });
+      this.Notification = result;
+    },
   },
   watch: {
-    currentMember() {
-      MemberList.setCurrentMember(this.currentMember);
+    currentMember(newValue) {
+      MemberList.setCurrentMember(newValue);
+      this.updateNotification();
     },
+  },
+  mounted() {
+    this.updateNotification();
   },
 };
 </script>

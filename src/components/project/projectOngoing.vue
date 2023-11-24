@@ -4,6 +4,9 @@
       <template v-for="item in calledList" :key="item.title">
         <projectOngoingCard :project="item" />
       </template>
+      <template v-if="calledList.length === 0">
+        <el-empty description="진행중인 프로젝트가 없습니다." />
+      </template>
     </el-tab-pane>
     <el-tab-pane label="대기중">
       <showPlan :projectPlan="'진행'" />

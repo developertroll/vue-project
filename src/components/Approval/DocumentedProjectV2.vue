@@ -87,6 +87,7 @@ export default {
         update: "날짜 업데이트",
         type: "종류",
         status: "결재 상태",
+        writer: "작성자",
       },
     };
   },

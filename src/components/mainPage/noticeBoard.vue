@@ -19,17 +19,18 @@
       @current-change="showPage"
     />
   </div>
-  <el-button type="primary" @click="writeEmit" v-if="admin">글쓰기</el-button>
+  <div class="button">
+    <el-button type="primary" @click="writeEmit" v-if="admin">글쓰기</el-button>
+  </div>
 </template>
 <script>
 import { noticeBoard } from "@/composables/noticeBoard";
+import { MemberList } from "@/composables/memberList";
 export default {
   name: "noticeBoard",
   emits: ["transition", "writeEmit"],
-
   data() {
     return {
-      admin: true,
       currentPage: 1,
     };
   },
@@ -62,6 +63,9 @@ export default {
     total() {
       return noticeBoard.boardList.length;
     },
+    admin() {
+      return MemberList.currentMember === MemberList.currentAdmin;
+    },
   },
 };
 </script>
@@ -70,5 +74,10 @@ export default {
   margin-top: 20px;
   display: flex;
   justify-content: center;
+}
+.button {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
 }
 </style>
