@@ -5,3 +5,6 @@ module.exports = defineConfig({
     client: { overlay: false },
   },
 });
+module.exports = {
+  outputDir: "docs",
+};
