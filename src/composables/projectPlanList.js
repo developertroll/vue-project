@@ -1,13 +1,12 @@
 import { reactive } from "vue";
-import VueCookies from "vue-cookies";
 import moment from "moment";
 import { NotificationList } from "./notificationList";
 import { MemberList } from "./memberList";
 
 export const projectPlanList = reactive({
-  List: VueCookies.get("projectPlanList") || [],
-  workList: VueCookies.get("workList") || [],
-  finishedList: VueCookies.get("finishedList") || [],
+  List: JSON.parse(localStorage.getItem("projectPlanList")) || [],
+  workList: JSON.parse(localStorage.getItem("workList")) || [],
+  finishedList: JSON.parse(localStorage.getItem("finishedList")) || [],
   //workList는 계획단계를 넘어간 진행단계에 있는 프로젝트들의 업무가 사용할 테이블. 이렇게 하면 계획안에 있던 내용을 보면서도 진행 중간 업무가 변경되더라도 계획안이 안바뀜.
   saveList(newList, originalIdx = undefined) {
     console.log(newList);
@@ -177,13 +176,13 @@ export const projectPlanList = reactive({
     return project;
   },
   setCookies() {
-    VueCookies.set("projectPlanList", this.List);
-    VueCookies.set("workList", this.workList);
-    VueCookies.set("finishedList", this.finishedList);
+    localStorage.setItem("projectPlanList", JSON.stringify(this.List));
+    localStorage.setItem("workList", JSON.stringify(this.workList));
+    localStorage.setItem("finishedList", JSON.stringify(this.finishedList));
   },
   getCookies() {
-    this.List = VueCookies.get("projectPlanList");
-    this.workList = VueCookies.get("workList");
-    this.finishedList = VueCookies.get("finishedList");
+    this.List = JSON.parse(localStorage.getItem("projectPlanList"));
+    this.workList = JSON.parse(localStorage.getItem("workList"));
+    this.finishedList = JSON.parse(localStorage.getItem("finishedList"));
   },
 });

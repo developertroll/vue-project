@@ -88,6 +88,7 @@ export default {
         type: "종류",
         status: "결재 상태",
         writer: "작성자",
+        master: "결재자",
       },
     };
   },
@@ -100,6 +101,8 @@ export default {
   methods: {
     openDialog() {
       this.test = true;
+      console.log(this.project, "project");
+      console.log(this.form, "form");
     },
   },
   computed: {
@@ -110,7 +113,7 @@ export default {
           if (this.project.status === "수정") {
             newList = this.project;
           } else {
-            newList = ApprovalList.findList(this.project);
+            newList = ApprovalList.findList(this.project.title);
           }
           console.log(newList);
         } else if (this.project && this.project.title) {
@@ -121,7 +124,7 @@ export default {
           delete newList.index;
           console.log(newList);
         }
-        delete newList.master;
+        // delete newList.master;
         return newList;
       } catch (error) {
         console.log(error);
@@ -132,7 +135,7 @@ export default {
   watch: {
     project: {
       handler() {
-        console.log(this.project);
+        console.log(this.project, "project");
       },
     },
   },

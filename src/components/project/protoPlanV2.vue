@@ -47,9 +47,10 @@ export default {
   },
   methods: {
     debug() {
-      console.log(ApprovalList.requestList);
+      console.log(ApprovalList.requestList, "전체");
       console.log(this.appData);
-      console.log(ApprovalList.callRequestListByMaster("결재자"), "문제코드");
+      console.log(ApprovalList.callRequestListByMaster("김철수"), "문제코드");
+      ApprovalList.storageDebug();
     },
     deletePlan(item) {
       ElMessageBox.confirm("정말로 삭제하시겠습니까?", "경고", {
@@ -83,17 +84,7 @@ export default {
   computed: {
     appData() {
       if (!Array.isArray(this.ApprovalList.requestList)) return [];
-      return ApprovalList.findRequestListByWriter(this.currentMember).map(
-        (item) => {
-          return {
-            type: item.type,
-            update: item.update,
-            title: item.title,
-            status: item.status === "요청" ? "대기중" : item.status,
-            master: item.master ? item.master.name : "",
-          };
-        }
-      );
+      return this.ApprovalList.findRequestListByWriter(this.currentMember);
     },
   },
 };

@@ -1,32 +1,28 @@
 <template lang="">
-  <div class="buttons">
-    <el-button type="primary" @click="approvalSubmit('승인')">승인</el-button>
-    <el-button type="danger" @click="approvalSubmit('반려')">반려</el-button>
-    <el-button type="info" @click="approvalSubmit('취소')">취소</el-button>
-    <el-button type="primary" @click="debug">값체크</el-button>
+  <div>
+    <div class="buttons">
+      <el-button type="primary" @click="approvalSubmit('승인')">승인</el-button>
+      <el-button type="danger" @click="approvalSubmit('반려')">반려</el-button>
+      <el-button type="info" @click="approvalSubmit('취소')">취소</el-button>
+      <el-button type="primary" @click="debug">값체크</el-button>
+    </div>
+    <el-table :data="appData" @selection-change="handleSelect" border>
+      <el-table-column type="selection" width="55"></el-table-column>
+      <el-table-column prop="type" label="종류"></el-table-column>
+      <el-table-column prop="update" label="날짜"></el-table-column>
+      <el-table-column label="제목">
+        <template #default="scope">
+          <template v-if="scope.row.type === '계획'">
+            <DocumentedProjectV2 :project="scope.row" />
+          </template>
+          <template v-else>
+            <div>{{ scope.row.title }}</div>
+          </template>
+        </template>
+      </el-table-column>
+      <el-table-column prop="status" label="상태"></el-table-column>
+    </el-table>
   </div>
-  <el-table
-    :data="appData"
-    style="width: 100%"
-    @selection-change="handleSelect"
-    border
-  >
-    <el-table-column type="selection" width="55"></el-table-column>
-    <el-table-column prop="type" label="종류"></el-table-column>
-    <el-table-column prop="update" label="날짜"></el-table-column>
-    <el-table-column label="제목">
-      <template #default="scope">
-        <DocumentedProjectV2
-          :project="scope.row"
-          v-if="scope.row.type === '계획'"
-        />
-        <div v-else>
-          {{ scope.row.title }}
-        </div>
-      </template>
-    </el-table-column>
-    <el-table-column prop="status" label="상태"></el-table-column>
-  </el-table>
 </template>
 <script>
 import { ApprovalList } from "@/composables/approvalList";
@@ -50,7 +46,7 @@ export default {
   methods: {
     debug() {
       console.log(this.currentMember);
-      console.log(this.appData);
+      console.log(this.appData, "appData");
     },
     handleSelect(selection) {
       this.selectedRow = selection;
@@ -92,8 +88,8 @@ export default {
         });
     },
     requestData() {
-      console.log(ApprovalList.requestList);
       if (!Array.isArray(ApprovalList.requestList)) return [];
+      console.log(ApprovalList.callRequestListByMaster(this.currentMember));
       return ApprovalList.callRequestListByMaster(this.currentMember).map(
         (item) => {
           if (item.type === "업무") {

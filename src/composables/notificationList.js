@@ -1,8 +1,7 @@
 import { reactive } from "vue";
-import VueCookies from "vue-cookies";
 
 export const NotificationList = reactive({
-  List: VueCookies.get("notificationList") || [],
+  List: JSON.parse(localStorage.getItem("notificationList")) || [],
   template: {
     to: "",
     from: "",
@@ -68,11 +67,11 @@ export const NotificationList = reactive({
       });
     }
     console.log(this.List);
-    VueCookies.set("notificationList", this.List);
+    localStorage.setItem("notificationList", JSON.stringify(this.List));
   },
   deleteListByIdx(idx) {
-    this.List.splice(idx, 1);
-    VueCookies.set("notificationList", this.List);
+    this.List.slice(idx, 1);
+    localStorage.setItem("notificationList", JSON.stringify(this.List));
   },
   callListByName(name) {
     return this.List.filter((element) => element.to === name);
@@ -82,6 +81,6 @@ export const NotificationList = reactive({
       (element) => element.title === title && element.type === type
     );
     this.List.splice(idx, 1);
-    VueCookies.set("notificationList", this.List);
+    localStorage.setItem("notificationList", JSON.stringify(this.List));
   },
 });

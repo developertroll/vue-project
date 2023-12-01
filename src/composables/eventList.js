@@ -1,20 +1,14 @@
 import { reactive } from "vue";
-import VueCookies from "vue-cookies";
 import { projectPlanList } from "./projectPlanList";
-import lzString from "lz-string";
 import { MemberList } from "./memberList";
 import { NotificationList } from "./notificationList";
 
 export const eventList = reactive({
-  eventList: VueCookies.get("eventList")
-    ? JSON.parse(
-        lzString.decompressFromEncodedURIComponent(VueCookies.get("eventList"))
-      )
+  eventList: localStorage.getItem("eventList")
+    ? JSON.parse(localStorage.getItem("eventList"))
     : [],
-  detailList: VueCookies.get("detailList")
-    ? JSON.parse(
-        lzString.decompressFromEncodedURIComponent(VueCookies.get("detailList"))
-      )
+  detailList: localStorage.getItem("detailList")
+    ? JSON.parse(localStorage.getItem("detailList"))
     : [],
   eventTemplate: {
     title: "",
@@ -66,18 +60,7 @@ export const eventList = reactive({
       MemberList.currentMember
     );
     this.eventList.push(list);
-    console.log(this.eventList);
-    const compressedEventList = lzString.compressToEncodedURIComponent(
-      JSON.stringify(this.eventList)
-    );
-    VueCookies.set("eventList", compressedEventList);
-    const savedEventList = JSON.parse(
-      lzString.decompressFromEncodedURIComponent(VueCookies.get("eventList"))
-    );
-    console.log(savedEventList, "savedEventList");
-    if (!savedEventList || savedEventList.length !== this.eventList.length) {
-      console.error("Failed to save the event list to the cookie.");
-    }
+    localStorage.setItem("eventList", JSON.stringify(this.eventList));
   },
   setEventByProjects() {
     const rawData = projectPlanList.callPlanList();

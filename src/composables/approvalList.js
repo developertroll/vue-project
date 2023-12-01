@@ -1,24 +1,14 @@
 import { reactive } from "vue";
 import { projectPlanList } from "./projectPlanList";
-import VueCookies from "vue-cookies";
 import { NotificationList } from "./notificationList";
 import { MemberList } from "./memberList";
-import lzString from "lz-string";
 
 export const ApprovalList = reactive({
-  requestList: VueCookies.get("requestList")
-    ? JSON.parse(
-        lzString.decompressFromEncodedURIComponent(
-          VueCookies.get("requestList")
-        )
-      )
+  requestList: localStorage.getItem("requestList")
+    ? JSON.parse(localStorage.getItem("requestList"))
     : [],
-  completeList: VueCookies.get("completeList")
-    ? JSON.parse(
-        lzString.decompressFromEncodedURIComponent(
-          VueCookies.get("completeList")
-        )
-      )
+  completeList: localStorage.getItem("completeList")
+    ? JSON.parse(localStorage.getItem("completeList"))
     : [],
   async request(newList, types, status) {
     const ApprovalMember = await MemberList.findHighestRankMember(
@@ -29,7 +19,7 @@ export const ApprovalList = reactive({
       ...newList,
       type: types,
       status: status,
-      master: ApprovalMember,
+      master: `${ApprovalMember.name}(${ApprovalMember.rank})`,
       writer: MemberList.currentMember,
     };
     NotificationList.saveList(
@@ -39,6 +29,7 @@ export const ApprovalList = reactive({
       MemberList.currentMember
     );
     this.requestList.push(addType);
+    console.log(this.requestList, "this.requestList");
     this.setCookies();
   },
   completion(newList) {
@@ -79,14 +70,11 @@ export const ApprovalList = reactive({
   },
   type: ["계획", "업무", "휴가", "기타"],
   status: ["대기", "승인", "반려", "취소"],
-  findList(item) {
-    const raw = this.requestList.find(
-      (list) => list.title === item.title || list.name === item.name
-    );
-    return raw;
+  findList(title) {
+    return this.requestList.find((list) => list.title === title);
   },
   search(item) {
-    const raw = this.requestList.find((list) => list.title === item);
+    const raw = this.requestList.filter((list) => list.title === item);
     return raw;
   },
   changeStatus(item, status) {
@@ -129,28 +117,18 @@ export const ApprovalList = reactive({
       console.error("An error occurred:", error);
     }
   },
-  toJSON(obj) {
-    return JSON.parse(JSON.stringify(obj));
-  },
   setCookies() {
-    const compressedRequestList = lzString.compressToEncodedURIComponent(
-      JSON.stringify(this.toJSON(this.requestList))
-    );
-    const compressedCompleteList = lzString.compressToEncodedURIComponent(
-      JSON.stringify(this.toJSON(this.completeList))
-    );
-    VueCookies.set("requestList", compressedRequestList);
-    VueCookies.set("completeList", compressedCompleteList);
+    const compressedRequestList = JSON.stringify(this.requestList);
+    const compressedCompleteList = JSON.stringify(this.completeList);
+    localStorage.setItem("requestList", compressedRequestList);
+    localStorage.setItem("completeList", compressedCompleteList);
   },
-  // getCookies() {
-  //   this.requestList = VueCookies.get("requestList");
-  //   this.completeList = VueCookies.get("completeList");
-  // },
   findRequestListByMember(name) {
     const raw = this.requestList.filter((list) => list.master === name);
     return raw;
   },
   findRequestListByWriter(name) {
+    this.requestList = JSON.parse(localStorage.getItem("requestList"));
     const raw = this.requestList.filter((list) => list.writer === name);
     return raw;
   },
@@ -162,10 +140,39 @@ export const ApprovalList = reactive({
     this.requestList.splice(index, 1);
   },
   callRequestListByMaster(name) {
-    console.log(this.requestList, name); // Add this line
-    const raw = this.requestList.filter(
-      (list) => list.master && list.master.name === name
+    this.requestList = JSON.parse(localStorage.getItem("requestList"));
+    console.log(
+      this.requestList,
+      "this.requestList after loading from localStorage"
     );
+    const raw = this.requestList.filter(
+      (list) => list.master && list.master.includes(name)
+    );
+    console.log(raw);
+
+    // Check if raw contains master value
+    const isMasterIncluded = raw.some((list) => list.master.includes(name));
+    console.log("Is master included?", isMasterIncluded);
+
     return raw;
+  },
+  storageDebug() {
+    // Check the data before saving
+    console.log(this.requestList, "Data before saving");
+
+    // Save data to localStorage
+    localStorage.setItem("requestList", JSON.stringify(this.requestList));
+
+    // Load data from localStorage
+    const loadedData = localStorage.getItem("requestList");
+
+    // Check the loaded data
+    console.log(loadedData, "Loaded data");
+
+    // Parse the loaded data
+    const parsedData = JSON.parse(loadedData);
+
+    // Check the parsed data
+    console.log(parsedData, "Parsed data");
   },
 });

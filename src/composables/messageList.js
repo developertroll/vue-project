@@ -1,16 +1,10 @@
 import { reactive } from "vue";
-import VueCookies from "vue-cookies";
 import { NotificationList } from "@/composables/notificationList";
-import lzString from "lz-string";
 import moment from "moment";
 
 export const messageList = reactive({
-  List: VueCookies.get("messageList")
-    ? JSON.parse(
-        lzString.decompressFromEncodedURIComponent(
-          VueCookies.get("messageList")
-        )
-      )
+  List: localStorage.getItem("messageList")
+    ? JSON.parse(localStorage.getItem("messageList"))
     : [],
   template: {
     title: "",
@@ -19,12 +13,8 @@ export const messageList = reactive({
     from: "",
     time: "",
   },
-  deletedList: VueCookies.get("deletedMessageList")
-    ? JSON.parse(
-        lzString.decompressFromEncodedURIComponent(
-          VueCookies.get("deletedMessageList")
-        )
-      )
+  deletedList: localStorage.getItem("deletedMessageList")
+    ? JSON.parse(localStorage.getItem("deletedMessageList"))
     : [],
   saveList(newList, to, from) {
     //to는 object가 들어오는 array라서 각각의 element를 처리해야함
@@ -39,21 +29,15 @@ export const messageList = reactive({
       });
       NotificationList.saveList(newList, "메세지", element, from);
     });
-    VueCookies.set(
-      "messageList",
-      lzString.compressToEncodedURIComponent(JSON.stringify(this.List))
-    );
+    localStorage.setItem("messageList", JSON.stringify(this.List));
   },
   deleteListByIdx(idx) {
     this.deletedList.push(this.List[idx]);
     this.List.splice(idx, 1);
-    VueCookies.set(
-      "messageList",
-      lzString.compressToEncodedURIComponent(JSON.stringify(this.List))
-    );
-    VueCookies.set(
+    localStorage.setItem("messageList", JSON.stringify(this.List));
+    localStorage.setItem(
       "deletedMessageList",
-      lzString.compressToEncodedURIComponent(JSON.stringify(this.deletedList))
+      JSON.stringify(this.deletedList)
     );
   },
   callListByName(name) {

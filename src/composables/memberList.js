@@ -1,9 +1,8 @@
 import { reactive } from "vue";
 import { JobList } from "./jobList";
-import VueCookies from "vue-cookies";
 
 export const MemberList = reactive({
-  List: VueCookies.get("memberList") || [
+  List: JSON.parse(localStorage.getItem("memberList")) || [
     {
       name: "김철수",
       job: "개발자",
@@ -76,7 +75,15 @@ export const MemberList = reactive({
     "전무",
     "사장",
   ],
-  RankList: VueCookies.get("rankList") || this.setRankList(),
+  RankList: [],
+  initRankList() {
+    const rankListFromStorage = JSON.parse(localStorage.getItem("rankList"));
+    if (rankListFromStorage) {
+      this.RankList = rankListFromStorage;
+    } else {
+      this.setRankList();
+    }
+  },
   changeList(newList) {
     this.List = newList;
   },
@@ -114,8 +121,8 @@ export const MemberList = reactive({
   addMember(newMember) {
     this.List.push(newMember);
     this.RankList = this.setRankList();
-    VueCookies.set("memberList", this.List);
-    VueCookies.set("rankList", this.RankList);
+    localStorage.setItem("memberList", JSON.stringify(this.List));
+    localStorage.setItem("rankList", JSON.stringify(this.RankList));
     console.log(this.List, this.RankList, "멤버 추가 완료 및 리스트 확인");
   },
   searchWithNameRank(name, rank) {
@@ -124,11 +131,11 @@ export const MemberList = reactive({
     );
     return result;
   },
-  currentMember: VueCookies.get("currentMember") || "김영희",
-  currentAdmin: VueCookies.get("currentAdmin") || "김철수",
+  currentMember: localStorage.getItem("currentMember") || "김영희",
+  currentAdmin: localStorage.getItem("currentAdmin") || "김철수",
   setCurrentMember(name) {
     this.currentMember = name;
-    VueCookies.set("currentMember", name);
+    localStorage.setItem("currentMember", name);
   },
   //받아온 member들의 rank를 비교해 가장 높은 rank를 가진 member 반환
   findHighestRankMember(members) {

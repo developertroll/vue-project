@@ -1,8 +1,7 @@
 import { reactive } from "vue";
-import VueCookies from "vue-cookies";
 
 export const noticeBoard = reactive({
-  boardList: VueCookies.get("boardList") || [],
+  boardList: JSON.parse(localStorage.getItem("boardList")) || [],
   boardTemplate: {
     title: "",
     content: "",
@@ -25,11 +24,11 @@ export const noticeBoard = reactive({
       const idx = this.boardList.length;
       this.boardList.unshift({ ...newList, index: idx });
     }
-    VueCookies.set("boardList", this.boardList);
+    localStorage.setItem("boardList", JSON.stringify(this.boardList));
   },
   deleteList(idx) {
     this.boardList.splice(idx, 1);
-    VueCookies.set("boardList", this.boardList);
+    localStorage.setItem("boardList", JSON.stringify(this.boardList));
   },
   findListByTitle(title) {
     const raw = this.boardList.find((list) => list.title.includes(title));
@@ -47,7 +46,7 @@ export const noticeBoard = reactive({
     const idx = list.index;
     const raw = this.boardList.find((list) => list.index === idx);
     raw.views += 1;
-    VueCookies.set("boardList", this.boardList);
+    localStorage.setItem("boardList", JSON.stringify(this.boardList));
   },
   showPage(number) {
     //number를 5로 나눠 몫, 나머지를 찾고 몫*5를 인덱스 시작점으로, 이후 나머지 만큼 데이터를 보여줌.

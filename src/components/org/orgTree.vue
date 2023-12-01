@@ -12,6 +12,7 @@ export default {
   },
   computed: {
     treeData() {
+      MemberList.initRankList();
       const treeData = [];
       //MemberList.RankList에서 각각이 가진 team 값이 최상위 label이 되며, 그 안에 각각이 가지고 있는 children[name]이 children이 된다.
       for (const item of this.MemberList.RankList) {
